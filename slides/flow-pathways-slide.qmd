@@ -1,0 +1,37 @@
+## Not quite your mix? There's a path either side
+
+::: {.spectrum}
+::: {.path}
+[Maths not your favourite?]{.path-tag}
+
+**Finance & Economics**
+
+Less maths, more money, markets and policy: how assets are priced, how businesses are funded, how economies and governments decide.
+:::
+::: {.path .path-here}
+[Today]{.path-tag}
+
+**Actuarial Studies**
+
+Maths and data applied to risk: insurance, superannuation and beyond.
+:::
+::: {.path}
+[Love the theory?]{.path-tag}
+
+**Statistics**
+
+Go deeper into probability, data and models: the theory that actuarial work is built on.
+:::
+:::
+
+::: {.spectrum-axis}
+[More business & economics]{.left} [More statistical theory]{.right}
+:::
+
+::: {.fdd .fragment .zoom-in}
+You can mix them too: picking electives, minors and even majors across disciplines. Want even more? **Flexible Double Degree:** combine two degrees from a wide variety of disciplines.
+:::
+
+::: {.notes}
+About 1 min. Press next to pop out the Flexible Double Degree box. Reassure students who enjoyed the game but aren't sure about the maths: the same ideas show up in finance and economics with less maths. For the keen maths students, statistics goes deeper.
+:::

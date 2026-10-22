@@ -1,0 +1,54 @@
+# Proposal: "Can You Price the Future?"
+
+**A 45-minute interactive workshop on risk, data and the actuarial profession**
+
+The session is built around one idea: actuaries put a price on uncertainty. Students run competing insurance companies, set prices from data, and see how their decisions play out when the dice decide who makes a claim. The main concepts come up through the game itself, so the session needs nothing beyond Year 10 maths.
+
+## Run sheet
+
+**1. Hook: "Guess the odds" (0–7 min)**
+Run a quick live poll (Mentimeter or a show of hands) with questions like:
+- What's the chance a 17-year-old in Australia lives to 90?
+- Which costs more to insure: a 19-year-old's Corolla or a 45-year-old's Porsche?
+- How many people need to be in a room for a shared birthday to be more likely than not?
+
+Reveal the answers. The gap between gut feel and data shows why the profession exists.
+
+**2. What actuaries actually do (7–12 min)**
+A short, visual explanation. One person's future is unpredictable, but 10,000 people's futures are surprisingly predictable. Give quick real examples: P-plate car insurance, superannuation and retirement income, climate and bushfire risk, pandemics, and life expectancy.
+
+**3. Main activity: "Insure the Class" (12–35 min)**
+Split the class into 4–6 teams, each running a phone insurance company. A phone claim costs $500.
+
+- **Round 1: Pricing basics.** All customers are identical: a claim happens on a d20 roll of 1–4, a 20% chance. Each team secretly sets a premium. Customers go to the cheapest insurer. Roll for each customer and tally profit and loss. Teams discover the expected cost is $100, and that underpricing wins customers but loses money. Small books of business also swing wildly, which shows the law of large numbers in action.
+- **Round 2: Using data.** Customers now get profile cards marked "careful" (claim on 1–2) or "clumsy" (claim on 1–8). Teams that keep a flat price attract the clumsy customers and lose money. This is adverse selection, with no jargon needed until the reveal.
+- **Round 3: Twist card.** Draw one, for example:
+  - "Regulator bans pricing by customer type."
+  - "A new phone model doubles repair costs."
+  - "A heatwave doubles claims for everyone this round."
+
+  Teams adjust, then have a short debate: *Is it fair to charge people more for things they can't control?* This links to real issues like postcode pricing, genetic testing and climate risk.
+
+Announce the most profitable insurer as the winner, along with "most ethical insurer" as voted by the class.
+
+**4. Where this can take you (35–42 min)**
+Connect each round back to real jobs:
+- Pricing actuary (Round 1)
+- Data analytics and machine learning (Round 2)
+- Regulation, government and enterprise risk (Round 3)
+
+Also mention the less obvious paths: superannuation, consulting, health, climate, banking, sports analytics and tech. Cover the pathway too. That means strong maths at school, an accredited degree such as ANU's actuarial program, and professional qualification through the Actuaries Institute, along with consistently strong employment outcomes. A short alumni quote or video works well here.
+
+**5. Exit quiz (42–45 min)**
+Three quick questions to reinforce the session:
+- What does an actuary do?
+- Why do insurers need many customers?
+- What went wrong for the flat-price team?
+
+## Logistics and outcomes
+
+**Materials:** one d20 per team (or a dice-roller web page on the projector), printed customer profile cards, twist cards, and a shared scoreboard (a whiteboard or a simple spreadsheet).
+
+**Learning outcomes:** students understand expected value, the law of large numbers, risk classification and adverse selection in plain terms, and can name several careers that use these ideas.
+
+**Scaling:** for Year 10 or larger groups, drop Round 3 and run the fairness discussion verbally. For strong Year 12 maths classes, ask teams to calculate break-even premiums before each round.

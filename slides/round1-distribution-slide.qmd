@@ -1,0 +1,274 @@
+## What if we played the game again and again?
+
+```{=html}
+<!--
+  Sampling distribution slide for "Insure the Class".
+  Each simulation is one game of customers: each claims with probability
+  data-claim-prob and each claim costs data-claim-cost. The bars show how
+  often each average cost per customer came up across all simulations so far.
+  "Show theory" overlays the exact (binomial) chances.
+
+  The number of customers can be changed live in the "Customers per game"
+  box; doing so starts the simulations again. Bars cover the likely range
+  (expected ± 3.5 standard deviations); when that needs more than
+  data-max-bars bars, neighbouring claim counts share a bar. The first and
+  last bars also collect anything further out ("≤" and "+").
+
+  Settings (on the .sd div below):
+    data-customers   starting customers in one game (default 20)
+    data-claim-cost  cost of one claim in dollars (default 600)
+    data-claim-prob  chance a customer claims, as a decimal or fraction (default 1/6)
+    data-max-bars    most bars to draw (default 20)
+-->
+<div class="sd" data-customers="20" data-claim-cost="600" data-claim-prob="1/6" data-max-bars="20">
+  <div class="sd-main">
+    <div>
+      <div class="sd-chart" data-out="chart"></div>
+      <div class="sd-axis-lab">Average cost per customer in one game of <span data-out="ncust">20</span> customers</div>
+    </div>
+    <div class="sd-side">
+      <label class="sd-stat sd-cust"><input class="sd-in" type="number" min="1" max="10000" step="1" inputmode="numeric" data-out="custin" aria-label="Customers per game"><div class="sd-lab">Customers per game</div></label>
+      <div class="sd-stat"><div class="sd-num" data-out="runs">0</div><div class="sd-lab">Simulated games</div></div>
+      <div class="sd-stat sd-latest"><div class="sd-num" data-out="latest">–</div><div class="sd-lab">Latest game</div></div>
+      <div class="sd-stat sd-key"><div class="sd-num" data-out="mean">–</div><div class="sd-lab">Average over all games<br><span class="sd-exp-lab">Expected <span data-out="expected">$100</span></span></div></div>
+      <div class="sd-var">Range <span data-out="range">–</span></div>
+    </div>
+  </div>
+  <div class="sd-tools">
+    <button type="button" class="sd-btn" data-act="1">Simulate once</button>
+    <button type="button" class="sd-btn" data-act="100">Simulate 100</button>
+    <button type="button" class="sd-btn" data-act="1000">Simulate 1,000</button>
+    <span class="sd-spacer"></span>
+    <button type="button" class="sd-small" data-act="theory">Show theory</button>
+    <button type="button" class="sd-small" data-act="reset">Reset</button>
+  </div>
+</div>
+
+<style>
+.reveal .sd {
+  --sd-accent: #24476b;
+  --sd-mark: #a8322a;
+  --sd-gold: #be830e;
+  --sd-line: rgba(0, 0, 0, 0.15);
+  --sd-line: color-mix(in srgb, currentColor 16%, transparent);
+  text-align: left;
+  font-variant-numeric: tabular-nums;
+  margin-top: 0.2em;
+}
+.reveal .sd .sd-main { display: grid; grid-template-columns: 1fr 230px; gap: 28px; align-items: start; }
+
+.reveal .sd .sd-chart { display: flex; gap: 6px; position: relative; }
+.reveal .sd .sd-col { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.reveal .sd .sd-plot { position: relative; height: 330px; border-bottom: 2px solid var(--sd-line); }
+.reveal .sd .sd-bar {
+  position: absolute; left: 8%; right: 8%; bottom: 0; height: 0;
+  background: var(--sd-accent); border-radius: 4px 4px 0 0;
+  transition: height 0.2s ease;
+}
+.reveal .sd .sd-col.is-latest .sd-bar { background: var(--sd-gold); }
+/* Expected cost: placed between bars when it isn't a possible outcome (e.g. $100 sits between $90 and $120) */
+.reveal .sd .sd-expline {
+  position: absolute; top: 0; height: 330px; width: 0;
+  border-left: 2px dashed var(--sd-mark);
+}
+.reveal .sd .sd-expline span {
+  position: absolute; top: -1.6em; left: 0; transform: translateX(-50%);
+  font-size: 0.4em; font-weight: 700; color: var(--sd-mark); white-space: nowrap;
+}
+.reveal .sd .sd-val {
+  position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%);
+  font-size: 0.4em; font-weight: 700; padding-bottom: 2px; white-space: nowrap;
+}
+.reveal .sd .sd-fit {
+  display: none; position: absolute; left: 0; right: 0; height: 0;
+  border-top: 3px solid var(--sd-mark); transition: bottom 0.2s ease;
+}
+.reveal .sd.show-theory .sd-fit { display: block; }
+.reveal .sd .sd-k { text-align: center; font-size: 0.4em; font-weight: 700; margin-top: 6px; white-space: nowrap; }
+.reveal .sd .sd-axis-lab { font-size: 0.45em; opacity: 0.75; text-align: center; margin-top: 6px; }
+
+.reveal .sd .sd-side { display: flex; flex-direction: column; gap: 16px; }
+.reveal .sd .sd-stat { border-top: 3px solid var(--sd-line); padding-top: 6px; }
+.reveal .sd .sd-latest { border-top-color: var(--sd-gold); }
+.reveal .sd .sd-latest .sd-num { color: var(--sd-gold); }
+.reveal .sd .sd-key { border-top-color: var(--sd-accent); }
+.reveal .sd .sd-key .sd-num { color: var(--sd-accent); font-size: 1.3em; }
+.reveal .sd .sd-num { font-size: 1.1em; font-weight: 700; line-height: 1.1; }
+.reveal .sd .sd-lab { font-size: 0.45em; opacity: 0.75; margin-top: 3px; }
+.reveal .sd .sd-exp-lab { color: var(--sd-mark); font-weight: 700; opacity: 1; }
+.reveal .sd .sd-var { font-size: 0.5em; }
+.reveal .sd .sd-cust { display: block; border-top-color: var(--sd-accent); cursor: text; }
+.reveal .sd .sd-in {
+  font: inherit; font-size: 1.1em; font-weight: 700; line-height: 1.1; width: 4.2em; color: inherit;
+  padding: 0 0.2em; border: 1.5px solid var(--sd-line); border-radius: 8px; background: transparent;
+  -moz-appearance: textfield;
+}
+.reveal .sd .sd-in::-webkit-outer-spin-button,
+.reveal .sd .sd-in::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.reveal .sd .sd-in:focus-visible { outline: 3px solid var(--sd-accent); outline-offset: 2px; }
+.reveal .sd .sd-var span { font-weight: 700; }
+
+.reveal .sd .sd-tools { display: flex; gap: 14px; align-items: center; margin-top: 14px; }
+.reveal .sd .sd-spacer { flex: 1; }
+.reveal .sd .sd-btn {
+  font: inherit; font-size: 0.5em; font-weight: 700; color: var(--sd-accent);
+  padding: 0.4em 1em; border: 2.5px solid currentColor; border-radius: 12px;
+  background: transparent; cursor: pointer;
+}
+.reveal .sd .sd-btn:hover { background: color-mix(in srgb, currentColor 9%, transparent); }
+.reveal .sd .sd-small {
+  font: inherit; font-size: 0.42em; padding: 0.35em 0.9em; color: inherit;
+  border: 1.5px solid var(--sd-line); border-radius: 8px; background: transparent; cursor: pointer;
+}
+.reveal .sd button:focus-visible { outline: 3px solid var(--sd-accent); outline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal .sd .sd-bar, .reveal .sd .sd-fit { transition: none; }
+}
+</style>
+
+<script>
+(function () {
+  var money = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', maximumFractionDigits: 0 });
+  var fmt = function (v) { return money.format(v); };
+
+  // Binomial(n, p) chances for k = 0..n, built up in log space so that a
+  // large n doesn't underflow
+  function binomAll(n, p) {
+    var out = [], lp = n * Math.log(1 - p), r = Math.log(p) - Math.log(1 - p);
+    for (var k = 0; k <= n; k++) {
+      out.push(Math.exp(lp));
+      lp += Math.log(n - k) - Math.log(k + 1) + r;
+    }
+    return out;
+  }
+
+  document.querySelectorAll('.sd:not([data-ready])').forEach(function (root) {
+    root.dataset.ready = '1';
+    var cost = Number(root.dataset.claimCost) || 600;
+    var prob = function (s, d) { var m = String(s || '').split('/'); var v = m.length === 2 ? Number(m[0]) / Number(m[1]) : Number(s); return v > 0 && v < 1 ? v : d; };
+    var p = prob(root.dataset.claimProb, 1 / 6);
+    var maxBars = Number(root.dataset.maxBars) || 20;
+    var MAX_N = 10000;
+    var expected = p * cost;
+    var chart = root.querySelector('[data-out="chart"]');
+    var out = function (name) { return root.querySelector('[data-out="' + name + '"]'); };
+    var custIn = out('custin');
+    out('expected').textContent = fmt(expected);
+
+    var n, kLo, g, counts, theory, cols;
+    var runs, sum, lo, hi, latestK;
+    var avgOf = function (k) { return (k * cost) / n; };
+    var binOf = function (k) { return Math.max(0, Math.min(cols.length - 1, Math.floor((k - kLo) / g))); };
+
+    // (Re)build the bars for n customers and clear the simulations
+    function setup(newN) {
+      n = newN;
+      custIn.value = n;
+      out('ncust').textContent = n.toLocaleString('en-AU');
+
+      // Likely range of claim counts, grouped g at a time to fit maxBars bars
+      var sd = Math.sqrt(n * p * (1 - p));
+      kLo = Math.max(0, Math.floor(n * p - 3.5 * sd));
+      var kHi = Math.min(n, Math.ceil(n * p + 3.5 * sd));
+      g = Math.ceil((kHi - kLo + 1) / maxBars);
+      var nb = Math.ceil((kHi - kLo + 1) / g);
+
+      counts = []; theory = []; cols = [];
+      for (var i = 0; i < nb; i++) { counts.push(0); theory.push(0); }
+      chart.innerHTML = '';
+      for (i = 0; i < nb; i++) {
+        var a = kLo + i * g, b = a + g - 1;            // claim counts in this bar
+        var first = i === 0 && kLo > 0, last = i === nb - 1 && b < n;
+        var label = (first ? '≤' : '') + fmt(avgOf(a + (g - 1) / 2)) + (last ? '+' : '');
+        var tip = first ? 'Up to ' + b + ' claims: up to ' + fmt(avgOf(b))
+          : last ? a + ' or more claims: ' + fmt(avgOf(a)) + ' or more'
+          : g === 1 ? a + ' claims: ' + fmt(avgOf(a))
+          : a + ' to ' + b + ' claims: ' + fmt(avgOf(a)) + ' to ' + fmt(avgOf(b));
+        var col = document.createElement('div');
+        col.className = 'sd-col';
+        col.title = tip + ' per customer';
+        col.innerHTML =
+          '<div class="sd-plot"><div class="sd-bar"><span class="sd-val"></span></div><div class="sd-fit"></div></div>' +
+          '<div class="sd-k">' + label + '</div>';
+        chart.appendChild(col);
+        cols.push({ el: col, bar: col.querySelector('.sd-bar'), val: col.querySelector('.sd-val'), fit: col.querySelector('.sd-fit') });
+      }
+      binomAll(n, p).forEach(function (t, k) { theory[binOf(k)] += t; });
+
+      // Dashed line at the expected cost, at its exact spot on the bar scale.
+      // Bar i is centred at i * (bar width + gap) + bar width / 2, with a 6px gap,
+      // and holds the claim counts centred on kLo + i * g + (g - 1) / 2.
+      var pos = Math.max(0, Math.min(nb - 1, (n * p - kLo - (g - 1) / 2) / g));
+      var expLine = document.createElement('div');
+      expLine.className = 'sd-expline';
+      var bw = '((100% - ' + (nb - 1) * 6 + 'px) / ' + nb + ')';
+      expLine.style.left = 'calc(' + pos + ' * (' + bw + ' + 6px) + ' + bw + ' / 2)';
+      expLine.innerHTML = '<span>Expected ' + fmt(expected) + '</span>';
+      chart.insertBefore(expLine, chart.firstChild);
+
+      runs = 0; sum = 0; lo = Infinity; hi = -Infinity; latestK = null;
+    }
+
+    function simulate() {
+      var k = 0;
+      for (var i = 0; i < n; i++) if (Math.random() < p) k++;
+      var a = avgOf(k);
+      counts[binOf(k)]++;
+      runs++;
+      sum += a;
+      lo = Math.min(lo, a);
+      hi = Math.max(hi, a);
+      latestK = k;
+    }
+
+    function render() {
+      var showTheory = root.classList.contains('show-theory');
+      var props = counts.map(function (c) { return runs ? c / runs : 0; });
+      var ymax = Math.max.apply(null, props.concat(showTheory ? theory : [], [0.05])) * 1.12;
+      cols.forEach(function (col, i) {
+        col.bar.style.height = (100 * props[i]) / ymax + '%';
+        col.val.textContent = counts[i] ? counts[i].toLocaleString('en-AU') : '';
+        col.fit.style.bottom = (100 * theory[i]) / ymax + '%';
+        col.el.classList.toggle('is-latest', latestK !== null && binOf(latestK) === i);
+      });
+      out('runs').textContent = runs.toLocaleString('en-AU');
+      out('latest').textContent = latestK === null ? '–' : fmt(avgOf(latestK));
+      out('mean').textContent = runs ? fmt(sum / runs) : '–';
+      out('range').textContent = runs > 1 ? fmt(lo) + ' to ' + fmt(hi) : '–';
+    }
+
+    root.querySelector('.sd-tools').addEventListener('click', function (e) {
+      var b = e.target.closest('button[data-act]');
+      if (!b) return;
+      var act = b.dataset.act;
+      if (act === 'theory') {
+        var on = root.classList.toggle('show-theory');
+        b.textContent = on ? 'Hide theory' : 'Show theory';
+      } else if (act === 'reset') {
+        setup(n);
+      } else {
+        for (var i = Number(act); i > 0; i--) simulate();
+      }
+      b.blur(); // keep reveal.js arrow-key navigation working
+      render();
+    });
+
+    // A new number of customers rebuilds the bars and starts again
+    custIn.addEventListener('change', function () {
+      var v = Math.round(Number(custIn.value));
+      if (v >= 1 && v <= MAX_N) { if (v !== n) setup(v); } else custIn.value = n;
+      render();
+    });
+    // Typing shouldn't trigger reveal.js shortcuts; Enter finishes the entry
+    custIn.addEventListener('keydown', function (e) {
+      e.stopPropagation();
+      if (e.key === 'Enter' || e.key === 'Escape') custIn.blur();
+    });
+
+    setup(Math.min(MAX_N, Math.max(1, Math.round(Number(root.dataset.customers) || 20))));
+    render();
+  });
+})();
+</script>
+```

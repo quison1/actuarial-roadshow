@@ -1,0 +1,247 @@
+## What happens with more customers?
+
+```{=html}
+<!--
+  Law of large numbers slide for "Insure the Class".
+  Each run simulates every pool size: each customer claims with
+  probability data-claim-prob, and each claim costs data-claim-cost.
+  The dots show the average cost per customer from every run so far;
+  the latest run is gold.
+
+  "Show theory" shades where about 95% of runs should land:
+  expected +/- 1.96 standard deviations, where the standard deviation of the
+  average cost is claim cost x sqrt(p(1 - p) / n). It halves each time the
+  pool gets four times bigger.
+
+  Settings (on the .lln div below):
+    data-claim-cost  cost of one claim in dollars (default 600)
+    data-claim-prob  chance a customer claims, as a decimal or fraction (default 1/6, a 1 on a die)
+    data-sizes       pool sizes to compare (default 20,100,1000)
+    data-axis-max    right end of the scale in dollars (default 300)
+    data-axis-step   gap between scale labels in dollars (default 50)
+-->
+<div class="lln" data-claim-cost="600" data-claim-prob="1/6" data-sizes="20,100,1000" data-axis-max="300" data-axis-step="50">
+  <div class="lln-grid" data-out="grid"></div>
+  <div class="lln-tools">
+    <button type="button" class="lln-btn" data-act="one">Simulate once</button>
+    <button type="button" class="lln-btn" data-act="many">Simulate 20 times</button>
+    <span class="lln-count" data-out="count">No runs yet</span>
+    <span class="lln-spacer"></span>
+    <button type="button" class="lln-small" data-act="theory">Show theory</button>
+    <button type="button" class="lln-small" data-act="reset">Reset</button>
+  </div>
+</div>
+
+<style>
+.reveal .lln {
+  --lln-accent: #24476b;
+  --lln-mark: #a8322a;
+  --lln-gold: #be830e; /* $anu-gold in custom.scss */
+  --lln-line: rgba(0, 0, 0, 0.15);
+  --lln-line: color-mix(in srgb, currentColor 16%, transparent);
+  text-align: left;
+  font-variant-numeric: tabular-nums;
+  margin-top: 0.2em;
+}
+.reveal .lln .lln-grid {
+  display: grid;
+  grid-template-columns: 6.5em 1fr 230px;
+  column-gap: 28px;
+  row-gap: 14px;
+}
+.reveal .lln .lln-label { align-self: center; font-size: 0.6em; font-weight: 700; line-height: 1.15; }
+.reveal .lln .lln-label small { display: block; font-weight: 400; font-size: 0.75em; opacity: 0.7; }
+.reveal .lln .lln-track {
+  position: relative; height: 104px;
+  border-bottom: 2px solid var(--lln-line);
+}
+.reveal .lln .lln-band {
+  display: none; position: absolute; top: 0; bottom: 0;
+  background: color-mix(in srgb, var(--lln-mark) 12%, transparent);
+  border-left: 1px solid color-mix(in srgb, var(--lln-mark) 40%, transparent);
+  border-right: 1px solid color-mix(in srgb, var(--lln-mark) 40%, transparent);
+}
+.reveal .lln.show-theory .lln-band { display: block; }
+.reveal .lln .lln-exp {
+  position: absolute; top: 0; bottom: 0; width: 0;
+  border-left: 2px dashed var(--lln-mark);
+}
+.reveal .lln .lln-dot {
+  position: absolute; top: 50%; width: 18px; height: 18px; margin: -9px 0 0 -9px;
+  border-radius: 50%; background: var(--lln-accent); opacity: 0.3;
+}
+.reveal .lln .lln-dot.is-latest {
+  width: 26px; height: 26px; margin: -13px 0 0 -13px; opacity: 1;
+  background: var(--lln-gold);
+  box-shadow: 0 0 0 3px #fff;
+}
+.reveal .lln .lln-result { align-self: center; border-top: 3px solid var(--lln-gold); padding-top: 6px; }
+.reveal .lln .lln-avg { font-size: 1.1em; font-weight: 700; color: var(--lln-gold); line-height: 1.1; }
+.reveal .lln .lln-lab { font-size: 0.45em; opacity: 0.75; margin-top: 3px; }
+.reveal .lln .lln-range { font-size: 0.45em; margin-top: 3px; min-height: 1.3em; }
+.reveal .lln .lln-range b { font-weight: 700; }
+.reveal .lln .lln-sd { visibility: hidden; font-size: 0.45em; color: var(--lln-mark); font-weight: 700; margin-top: 2px; }
+.reveal .lln.show-theory .lln-sd { visibility: visible; }
+
+.reveal .lln .lln-axis { position: relative; height: 3.4em; margin-top: -8px; font-size: 0.45em; }
+.reveal .lln .lln-tick {
+  position: absolute; top: 4px; transform: translateX(-50%);
+  font-weight: 700; white-space: nowrap;
+}
+.reveal .lln .lln-tick.is-exp { color: var(--lln-mark); }
+.reveal .lln .lln-axis-lab { position: absolute; left: 0; right: 0; top: 1.9em; text-align: center; opacity: 0.75; }
+
+.reveal .lln .lln-tools { display: flex; gap: 14px; align-items: center; margin-top: 4px; }
+.reveal .lln .lln-spacer { flex: 1; }
+.reveal .lln .lln-btn {
+  font: inherit; font-size: 0.5em; font-weight: 700; color: var(--lln-accent);
+  padding: 0.4em 1em; border: 2.5px solid currentColor; border-radius: 12px;
+  background: transparent; cursor: pointer;
+}
+.reveal .lln .lln-btn:hover { background: color-mix(in srgb, currentColor 9%, transparent); }
+.reveal .lln .lln-count { font-size: 0.45em; opacity: 0.7; }
+.reveal .lln .lln-small {
+  font: inherit; font-size: 0.42em; padding: 0.35em 0.9em; color: inherit;
+  border: 1.5px solid var(--lln-line); border-radius: 8px; background: transparent; cursor: pointer;
+}
+.reveal .lln button:disabled { opacity: 0.35; cursor: default; }
+.reveal .lln button:focus-visible { outline: 3px solid var(--lln-accent); outline-offset: 3px; }
+</style>
+
+<script>
+(function () {
+  var money = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', maximumFractionDigits: 0 });
+  var fmt = function (v) { return money.format(v); };
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  document.querySelectorAll('.lln:not([data-ready])').forEach(function (root) {
+    root.dataset.ready = '1';
+    var cost = Number(root.dataset.claimCost) || 600;
+    var prob = function (s, d) { var m = String(s || '').split('/'); var v = m.length === 2 ? Number(m[0]) / Number(m[1]) : Number(s); return v > 0 && v < 1 ? v : d; };
+    var p = prob(root.dataset.claimProb, 1 / 6);
+    var axisMax = Number(root.dataset.axisMax) || 300;
+    var axisStep = Number(root.dataset.axisStep) || 50;
+    var sizes = (root.dataset.sizes || '20,100,1000').split(',').map(Number);
+    var expected = p * cost;
+    var pct = function (v) { return Math.max(0, Math.min(v / axisMax, 1)) * 100 + '%'; };
+    var grid = root.querySelector('[data-out="grid"]');
+    var count = root.querySelector('[data-out="count"]');
+    var buttons = root.querySelectorAll('button[data-act]');
+    var runs = 0;
+
+    // Build one row per pool size
+    var rows = sizes.map(function (n) {
+      var sd = cost * Math.sqrt((p * (1 - p)) / n); // standard deviation of the average cost
+      var label = document.createElement('div');
+      label.className = 'lln-label';
+      label.innerHTML = n.toLocaleString('en-AU') + '<small>customers</small>';
+      var track = document.createElement('div');
+      track.className = 'lln-track';
+      var band = document.createElement('div');
+      band.className = 'lln-band';
+      var lo = Math.max(0, expected - 1.96 * sd), hi = Math.min(axisMax, expected + 1.96 * sd);
+      band.style.left = pct(lo);
+      band.style.width = ((hi - lo) / axisMax) * 100 + '%';
+      var exp = document.createElement('div');
+      exp.className = 'lln-exp';
+      exp.style.left = pct(expected);
+      track.append(band, exp);
+      var result = document.createElement('div');
+      result.className = 'lln-result';
+      result.innerHTML =
+        '<div class="lln-avg">–</div><div class="lln-lab">Latest run</div>' +
+        '<div class="lln-range"></div>' +
+        '<div class="lln-sd">95% of runs: ' + fmt(expected - 1.96 * sd) + ' to ' + fmt(expected + 1.96 * sd) + '</div>';
+      grid.append(label, track, result);
+      return { n: n, track: track, avg: result.querySelector('.lln-avg'), range: result.querySelector('.lln-range'), values: [], latest: null };
+    });
+
+    // Scale under the tracks; the expected cost replaces the plain label it lands on
+    var axis = document.createElement('div');
+    axis.className = 'lln-axis';
+    for (var v = 0; v <= axisMax; v += axisStep) {
+      if (Math.abs(v - expected) < axisStep / 2) continue;
+      var t = document.createElement('span');
+      t.className = 'lln-tick';
+      t.style.left = pct(v);
+      t.textContent = fmt(v) + (v === axisMax ? '+' : '');
+      axis.appendChild(t);
+    }
+    var et = document.createElement('span');
+    et.className = 'lln-tick is-exp';
+    et.style.left = pct(expected);
+    et.textContent = 'Expected ' + fmt(expected);
+    axis.appendChild(et);
+    var al = document.createElement('div');
+    al.className = 'lln-axis-lab';
+    al.textContent = 'Average cost per customer';
+    axis.appendChild(al);
+    grid.append(document.createElement('div'), axis, document.createElement('div'));
+
+    function simulate(n) {
+      var k = 0;
+      for (var i = 0; i < n; i++) if (Math.random() < p) k++;
+      return (k * cost) / n;
+    }
+
+    function runOnce() {
+      rows.forEach(function (r) {
+        var a = simulate(r.n);
+        r.values.push(a);
+        if (r.latest) r.latest.classList.remove('is-latest');
+        var d = document.createElement('span');
+        d.className = 'lln-dot is-latest';
+        d.style.left = pct(a); // anything past the scale sits on its right edge ("$300+")
+        d.title = fmt(a);
+        r.track.appendChild(d);
+        r.latest = d;
+        r.avg.textContent = fmt(a);
+        if (r.values.length > 1) {
+          r.range.innerHTML = 'Range <b>' + fmt(Math.min.apply(null, r.values)) + ' to ' + fmt(Math.max.apply(null, r.values)) + '</b>';
+        }
+      });
+      runs++;
+      count.textContent = runs + (runs === 1 ? ' run' : ' runs');
+    }
+
+    function reset() {
+      rows.forEach(function (r) {
+        r.values = [];
+        r.latest = null;
+        r.track.querySelectorAll('.lln-dot').forEach(function (d) { d.remove(); });
+        r.avg.textContent = '–';
+        r.range.textContent = '';
+      });
+      runs = 0;
+      count.textContent = 'No runs yet';
+    }
+
+    function setBusy(busy) {
+      buttons.forEach(function (b) { if (b.dataset.act !== 'theory') b.disabled = busy; });
+    }
+
+    root.addEventListener('click', function (e) {
+      var b = e.target.closest('button[data-act]');
+      if (!b || b.disabled) return;
+      b.blur(); // keep reveal.js arrow-key navigation working
+      var act = b.dataset.act;
+      if (act === 'one') runOnce();
+      else if (act === 'reset') reset();
+      else if (act === 'theory') {
+        var on = root.classList.toggle('show-theory');
+        b.textContent = on ? 'Hide theory' : 'Show theory';
+      } else if (act === 'many') {
+        if (reduceMotion) { for (var i = 0; i < 20; i++) runOnce(); return; }
+        setBusy(true);
+        var left = 20;
+        (function step() {
+          runOnce();
+          if (--left > 0) setTimeout(step, 90);
+          else setBusy(false);
+        })();
+      }
+    });
+  });
+})();
+</script>
+```

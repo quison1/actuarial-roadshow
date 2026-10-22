@@ -1,0 +1,15 @@
+# Rendered decks: rebuild with `quarto render <deck>.qmd`
+*.html
+*_files/
+.quarto/
+
+# R / OS clutter
+.Rhistory
+.RData
+.Rproj.user/
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Office lock files
+~$*

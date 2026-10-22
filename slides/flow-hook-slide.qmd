@@ -1,0 +1,107 @@
+## Who has cracked, lost or broken a phone in the past year?
+
+```{=html}
+<!--
+  Opening hook: a show of hands gives the room's own "claim rate", compared
+  with the 1 in 6 used in the game. Type the number of hands and the number
+  of students; the bars update straight away.
+
+  Settings (on the .hk div below):
+    data-game-prob   the game's claim chance, as a decimal or fraction (default 1/6)
+-->
+<div class="hk" data-game-prob="1/6">
+  <div class="hk-inputs">
+    <label>Hands up <input class="hk-in" type="number" min="0" step="1" inputmode="numeric" data-out="hands" aria-label="Hands up"></label>
+    <label>Students in the room <input class="hk-in" type="number" min="1" step="1" inputmode="numeric" data-out="class" aria-label="Students in the room"></label>
+  </div>
+
+  <div class="hk-hero"><span data-out="frac">–</span> <span class="hk-pct" data-out="pct"></span></div>
+
+  <div class="hk-bars">
+    <div class="hk-lab">This room</div>
+    <div class="hk-track"><div class="hk-bar hk-room" data-out="roombar"></div></div>
+    <div class="hk-val" data-out="roomval">–</div>
+    <div class="hk-lab">Our game<br><small>a 1 on a die</small></div>
+    <div class="hk-track"><div class="hk-bar hk-game" data-out="gamebar"></div></div>
+    <div class="hk-val" data-out="gameval"></div>
+  </div>
+</div>
+
+<style>
+.reveal .hk {
+  --hk-gold: #be830e;
+  --hk-accent: #24476b;
+  --hk-line: rgba(0, 0, 0, 0.15);
+  --hk-line: color-mix(in srgb, currentColor 16%, transparent);
+  text-align: left;
+  font-variant-numeric: tabular-nums;
+}
+.reveal .hk .hk-inputs { display: flex; gap: 48px; font-size: 0.8em; font-weight: 600; }
+.reveal .hk .hk-inputs label { display: flex; align-items: center; gap: 0.6em; }
+.reveal .hk .hk-in {
+  font: inherit; width: 4em; text-align: right; padding: 0.2em 0.4em; color: inherit;
+  border: 1.5px solid var(--hk-line); border-radius: 8px; background: transparent;
+  -moz-appearance: textfield;
+}
+.reveal .hk .hk-in::-webkit-outer-spin-button,
+.reveal .hk .hk-in::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.reveal .hk .hk-in:focus-visible { outline: 3px solid var(--hk-accent); outline-offset: 2px; }
+.reveal .hk .hk-hero { font-size: 2.6em; font-weight: 700; margin: 0.5em 0 0.4em; line-height: 1; }
+.reveal .hk .hk-pct { color: var(--hk-gold); }
+.reveal .hk .hk-bars {
+  display: grid; grid-template-columns: 8em 1fr 3.5em; column-gap: 24px; row-gap: 24px;
+  align-items: center; font-size: 0.8em;
+}
+.reveal .hk .hk-lab { font-weight: 700; line-height: 1.15; }
+.reveal .hk .hk-lab small { font-weight: 400; opacity: 0.7; }
+.reveal .hk .hk-track { height: 48px; border-bottom: 2px solid var(--hk-line); position: relative; }
+.reveal .hk .hk-bar {
+  position: absolute; left: 0; top: 0; bottom: 0; width: 0;
+  border-radius: 0 4px 4px 0; transition: width 0.3s ease;
+}
+.reveal .hk .hk-room { background: var(--hk-gold); }
+.reveal .hk .hk-game { background: var(--hk-accent); }
+.reveal .hk .hk-val { font-weight: 700; text-align: right; }
+@media (prefers-reduced-motion: reduce) { .reveal .hk .hk-bar { transition: none; } }
+</style>
+
+<script>
+(function () {
+  var prob = function (s, d) { var m = String(s || '').split('/'); var v = m.length === 2 ? Number(m[0]) / Number(m[1]) : Number(s); return v > 0 && v < 1 ? v : d; };
+  var pctTxt = function (v) { return Math.round(v * 100) + '%'; };
+
+  document.querySelectorAll('.hk:not([data-ready])').forEach(function (root) {
+    root.dataset.ready = '1';
+    var game = prob(root.dataset.gameProb, 1 / 6);
+    var out = function (name) { return root.querySelector('[data-out="' + name + '"]'); };
+    // Bars share one scale: up to 50%, or more if the room is higher
+    function render() {
+      var h = parseInt(out('hands').value, 10), n = parseInt(out('class').value, 10);
+      var ok = !isNaN(h) && !isNaN(n) && n > 0 && h >= 0 && h <= n;
+      var room = ok ? h / n : null;
+      var max = Math.max(0.5, room || 0, game);
+      out('frac').textContent = ok ? h + ' of ' + n : '–';
+      out('pct').textContent = ok ? '= ' + pctTxt(room) : '';
+      out('roombar').style.width = ok ? (100 * room) / max + '%' : '0';
+      out('roomval').textContent = ok ? pctTxt(room) : '–';
+      out('gamebar').style.width = (100 * game) / max + '%';
+      out('gameval').textContent = pctTxt(game);
+    }
+    root.addEventListener('input', render);
+    // Typing shouldn't trigger reveal.js shortcuts; Enter finishes the entry
+    root.addEventListener('keydown', function (e) {
+      if (!e.target.classList.contains('hk-in')) return;
+      e.stopPropagation();
+      if (e.key === 'Enter' || e.key === 'Escape') e.target.blur();
+    });
+    render();
+  });
+})();
+</script>
+```
+
+::: {.notes}
+0–3 min. Ask for hands before showing anything else. Count them, ask how many are in the room, and type both in.
+
+"Insurers face exactly this question: out of all their customers, how many will claim? Today you'll run a phone insurance company. In our game, the chance of a claim is 1 in 6."
+:::

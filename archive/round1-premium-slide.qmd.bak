@@ -1,0 +1,303 @@
+## Phone insurance: premium vs claims
+
+```{=html}
+<!--
+  Claim tracker with a premium for "Insure the Class" (chart version).
+  Set the premium with the slider, then record each customer as No claim or
+  Claim (roll a die: a 1 is a claim). The chart follows the business customer
+  by customer:
+    Revenue  (gold)  premium x customers, a straight line
+    Expense  (red)   claim costs, jumping by one claim cost at every claim
+    Profit           the gap between them at the latest customer
+  "Show expected expense" adds the average expense line (claim chance x claim
+  cost per customer). Moving the slider redraws revenue for everyone so far.
+
+  Two versions of this slide are kept: round1-premium-slide.qmd (used by the
+  decks) and round1-premium-slide.qmd.bak (the other one). To switch, swap
+  the two file names and re-render.
+
+  Settings (on the .ip div below):
+    data-claim-cost  cost of one claim in dollars; also the slider maximum (default 600)
+    data-claim-prob  chance a customer claims, as a decimal or fraction (default 1/6)
+    data-premium     starting premium per customer (default 100)
+    data-step        slider step in dollars (default 5)
+-->
+<div class="ip" data-claim-cost="600" data-claim-prob="1/6" data-premium="100" data-step="5">
+  <div class="ip-top">
+    <label class="ip-premium">
+      <span class="ip-premium-lab">Premium per customer</span>
+      <input type="range" class="ip-slider" data-out="slider" min="0" max="600" step="5" value="100">
+      <span class="ip-premium-val" data-out="premium">$100</span>
+    </label>
+    <div class="ip-actions">
+      <button type="button" class="ip-btn ip-none" data-act="none">No claim</button>
+      <button type="button" class="ip-btn ip-claim" data-act="claim">Claim <span class="ip-btn-sub" data-out="costlabel">$600</span></button>
+    </div>
+  </div>
+
+  <div class="ip-stats">
+    <div class="ip-stat"><div class="ip-num" data-out="n">0</div><div class="ip-lab">Customers · <span data-out="k">0</span> claims</div></div>
+    <div class="ip-stat ip-rev"><div class="ip-num" data-out="revenue">$0</div><div class="ip-lab">Revenue (premiums)</div></div>
+    <div class="ip-stat ip-exp"><div class="ip-num" data-out="expense">$0</div><div class="ip-lab">Expense (claim costs)</div></div>
+    <div class="ip-stat ip-key" data-out="profitbox"><div class="ip-num" data-out="profit">$0</div><div class="ip-lab">Profit = revenue − expense</div></div>
+  </div>
+
+  <svg class="ip-chart" data-out="chart" viewBox="0 0 1080 310" role="img" aria-label="Revenue and expense after each customer"></svg>
+
+  <div class="ip-tools">
+    <button type="button" class="ip-small" data-act="expected">Show expected expense</button>
+    <span class="ip-key-exp"><i></i><span data-out="expkey"></span></span>
+    <span class="ip-spacer"></span>
+    <button type="button" class="ip-small" data-act="undo">Undo</button>
+    <button type="button" class="ip-small" data-act="reset">Reset</button>
+  </div>
+</div>
+
+<style>
+.reveal .ip {
+  --ip-ok: #1d6b52;
+  --ip-bad: #a8322a;
+  --ip-accent: #24476b;
+  --ip-gold: #be830e; /* ANU gold, $anu-gold in custom.scss */
+  --ip-gold-light: #dfc187; /* $anu-gold-light in custom.scss */
+  --ip-line: rgba(0, 0, 0, 0.15);
+  --ip-line: color-mix(in srgb, currentColor 16%, transparent);
+  text-align: left;
+  font-variant-numeric: tabular-nums;
+}
+.reveal .ip .ip-top { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: center; }
+.reveal .ip .ip-actions { display: flex; gap: 16px; }
+.reveal .ip .ip-btn {
+  font: inherit; font-size: 0.7em; font-weight: 700;
+  padding: 0.35em 1em; border: 3px solid; border-radius: 14px;
+  background: transparent; cursor: pointer;
+  display: flex; align-items: baseline; gap: 0.45em;
+  transition: transform 0.08s, background-color 0.15s;
+}
+.reveal .ip .ip-none  { color: var(--ip-ok); }
+.reveal .ip .ip-claim { color: var(--ip-bad); }
+.reveal .ip .ip-btn:hover  { background: color-mix(in srgb, currentColor 9%, transparent); }
+.reveal .ip .ip-btn:active { transform: scale(0.97); }
+.reveal .ip button:focus-visible, .reveal .ip .ip-slider:focus-visible { outline: 3px solid var(--ip-accent); outline-offset: 3px; }
+.reveal .ip .ip-btn-sub { font-weight: 400; font-size: 0.7em; opacity: 0.85; }
+
+.reveal .ip .ip-premium { display: flex; align-items: center; gap: 18px; }
+.reveal .ip .ip-premium-lab { font-size: 0.5em; font-weight: 700; white-space: nowrap; }
+.reveal .ip .ip-slider {
+  flex: 1; height: 28px; cursor: pointer; background: transparent;
+  -webkit-appearance: none; appearance: none;
+}
+.reveal .ip .ip-slider::-webkit-slider-runnable-track {
+  height: 8px; border-radius: 4px;
+  /* gold up to the thumb, light gold after; --ip-pct is set by the script */
+  background: linear-gradient(to right, var(--ip-gold) var(--ip-pct, 0%), var(--ip-gold-light) var(--ip-pct, 0%));
+}
+.reveal .ip .ip-slider::-moz-range-track { height: 8px; border-radius: 4px; background: var(--ip-gold-light); }
+.reveal .ip .ip-slider::-moz-range-progress { height: 8px; border-radius: 4px; background: var(--ip-gold); }
+.reveal .ip .ip-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 24px; height: 24px; margin-top: -8px;
+  border-radius: 50%; background: var(--ip-gold); border: 0;
+}
+.reveal .ip .ip-slider::-moz-range-thumb { width: 24px; height: 24px; border-radius: 50%; background: var(--ip-gold); border: 0; }
+.reveal .ip .ip-premium-val { font-size: 1em; font-weight: 700; color: var(--ip-gold); min-width: 3.4em; text-align: right; }
+
+.reveal .ip .ip-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin: 14px 0 8px; }
+.reveal .ip .ip-stat { border-top: 4px solid var(--ip-line); padding-top: 6px; }
+.reveal .ip .ip-num { font-size: 1.05em; font-weight: 700; line-height: 1.1; }
+.reveal .ip .ip-lab { font-size: 0.42em; opacity: 0.75; margin-top: 3px; }
+.reveal .ip .ip-rev { border-top-color: var(--ip-gold); }
+.reveal .ip .ip-rev .ip-num { color: var(--ip-gold); }
+.reveal .ip .ip-exp { border-top-color: var(--ip-bad); }
+.reveal .ip .ip-exp .ip-num { color: var(--ip-bad); }
+.reveal .ip .ip-key { border-top-color: var(--ip-accent); }
+.reveal .ip .ip-key .ip-num { color: var(--ip-accent); }
+.reveal .ip .ip-key.is-gain { border-top-color: var(--ip-ok); }
+.reveal .ip .ip-key.is-gain .ip-num { color: var(--ip-ok); }
+.reveal .ip .ip-key.is-loss { border-top-color: var(--ip-bad); }
+.reveal .ip .ip-key.is-loss .ip-num { color: var(--ip-bad); }
+
+.reveal .ip .ip-chart { display: block; width: 100%; height: auto; overflow: visible; border: 0; }
+.reveal .ip .ip-chart text { font-family: inherit; font-size: 15px; fill: currentColor; }
+.reveal .ip .ip-chart .ax text { opacity: 0.65; }
+.reveal .ip .ip-chart .grid { stroke: currentColor; stroke-opacity: 0.12; }
+.reveal .ip .ip-chart .base { stroke: currentColor; stroke-opacity: 0.35; stroke-width: 1.5; }
+.reveal .ip .ip-chart .rev { stroke: var(--ip-gold); stroke-width: 4; fill: none; stroke-linecap: round; }
+.reveal .ip .ip-chart .exp { stroke: var(--ip-bad); stroke-width: 4; fill: none; stroke-linejoin: round; }
+.reveal .ip .ip-chart .expx { stroke: var(--ip-bad); stroke-width: 2; stroke-dasharray: 8 6; fill: none; }
+.reveal .ip .ip-chart .gap-gain { fill: var(--ip-ok); fill-opacity: 0.12; }
+.reveal .ip .ip-chart .gap-loss { fill: var(--ip-bad); fill-opacity: 0.12; }
+.reveal .ip .ip-chart .bracket { stroke-width: 3; }
+.reveal .ip .ip-chart .is-gain { stroke: var(--ip-ok); fill: var(--ip-ok); }
+.reveal .ip .ip-chart .is-loss { stroke: var(--ip-bad); fill: var(--ip-bad); }
+.reveal .ip .ip-chart text.is-gain, .reveal .ip .ip-chart text.is-loss { stroke: none; font-weight: 700; font-size: 17px; }
+.reveal .ip .ip-chart text.hint { opacity: 0.55; font-size: 17px; }
+
+.reveal .ip .ip-tools { display: flex; gap: 12px; align-items: center; margin-top: 4px; }
+.reveal .ip .ip-spacer { flex: 1; }
+.reveal .ip .ip-key-exp { display: none; align-items: center; gap: 8px; font-size: 0.42em; color: var(--ip-bad); font-weight: 700; }
+.reveal .ip .ip-key-exp i { width: 28px; border-top: 2px dashed var(--ip-bad); }
+.reveal .ip.show-expected .ip-key-exp { display: flex; }
+.reveal .ip .ip-small {
+  font: inherit; font-size: 0.42em; padding: 0.35em 0.9em; color: inherit;
+  border: 1.5px solid var(--ip-line); border-radius: 8px; background: transparent; cursor: pointer;
+}
+.reveal .ip .ip-small:disabled { opacity: 0.35; cursor: default; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal .ip .ip-btn { transition: none; }
+}
+</style>
+
+<script>
+(function () {
+  var money = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', maximumFractionDigits: 0 });
+  var fmt = function (v) { return money.format(v); };
+  var signed = function (v) { return (v > 0 ? '+' : v < 0 ? '−' : '') + fmt(Math.abs(v)); };
+  var prob = function (s, d) { var m = String(s || '').split('/'); var v = m.length === 2 ? Number(m[0]) / Number(m[1]) : Number(s); return v > 0 && v < 1 ? v : d; };
+
+  // Round a step up to 1, 2 or 5 x a power of ten
+  function niceStep(raw) {
+    var pow = Math.pow(10, Math.floor(Math.log(raw) / Math.LN10));
+    var f = raw / pow;
+    return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 5 ? 5 : 10) * pow;
+  }
+
+  document.querySelectorAll('.ip:not([data-ready])').forEach(function (root) {
+    root.dataset.ready = '1';
+    var cost = Number(root.dataset.claimCost) || 600;
+    var p = prob(root.dataset.claimProb, 1 / 6);
+    var hist = []; // 1 = claim, 0 = no claim
+    var out = function (name) { return root.querySelector('[data-out="' + name + '"]'); };
+    var pct = function (v) { return Math.max(0, Math.min(v / cost, 1)) * 100 + '%'; };
+
+    var slider = out('slider');
+    slider.max = cost;
+    slider.step = Number(root.dataset.step) || 5;
+    slider.value = Number(root.dataset.premium) || 0;
+    out('costlabel').textContent = fmt(cost);
+    out('expkey').textContent = 'Expected expense: ' + (root.dataset.claimProb || '1/6') + ' × ' + fmt(cost) + ' = ' + fmt(p * cost) + ' per customer';
+
+    // Chart geometry, in viewBox units
+    var W = 1080, H = 310, L = 70, R = 170, T = 14, B = 34;
+
+    function drawChart(premium) {
+      var n = hist.length;
+      var showExp = root.classList.contains('show-expected');
+      var cum = [0];
+      hist.forEach(function (c) { cum.push(cum[cum.length - 1] + c * cost); });
+      var rev = premium * n, exp = cum[n];
+      var xmax = Math.max(10, n);
+      var ymax = Math.max(rev, exp, showExp ? p * cost * n : 0, cost) * 1.08;
+      var x = function (i) { return L + ((W - L - R) * i) / xmax; };
+      var y = function (v) { return H - B - ((H - B - T) * v) / ymax; };
+      var svg = [];
+
+      // Grid and axes
+      var ys = niceStep(ymax / 4);
+      for (var v = 0; v <= ymax; v += ys) {
+        svg.push('<line class="grid" x1="' + L + '" x2="' + (W - R) + '" y1="' + y(v) + '" y2="' + y(v) + '"/>');
+        svg.push('<g class="ax"><text x="' + (L - 10) + '" y="' + (y(v) + 5) + '" text-anchor="end">' + fmt(v) + '</text></g>');
+      }
+      var xs = niceStep(xmax / 10);
+      for (var i = 0; i <= xmax; i += xs) {
+        svg.push('<g class="ax"><text x="' + x(i) + '" y="' + (H - B + 20) + '" text-anchor="middle">' + i + '</text></g>');
+      }
+      svg.push('<line class="base" x1="' + L + '" x2="' + (W - R) + '" y1="' + y(0) + '" y2="' + y(0) + '"/>');
+      svg.push('<g class="ax"><text x="' + (W - R) + '" y="' + (H - 1) + '" text-anchor="end">Customers</text></g>');
+
+      if (!n) {
+        svg.push('<text class="hint" x="' + (L + W - R) / 2 + '" y="' + (H - B) / 2 + '" text-anchor="middle">Record a customer to start the chart</text>');
+        out('chart').innerHTML = svg.join('');
+        return;
+      }
+
+      // Expense: flat between customers, jumping up by one claim cost at each claim
+      var ePts = [[x(0), y(0)]];
+      for (var j = 1; j <= n; j++) {
+        ePts.push([x(j), y(cum[j - 1])]);
+        if (hist[j - 1]) ePts.push([x(j), y(cum[j])]);
+      }
+      var ePath = 'M' + ePts.map(function (q) { return q[0] + ',' + q[1]; }).join(' L');
+
+      // Shade the gap between revenue and expense: green where revenue is ahead, red where behind
+      for (var s = 1; s <= n; s++) {
+        var e = cum[s - 1];
+        var r0 = premium * (s - 1), r1 = premium * s;
+        var cls = (r0 + r1) / 2 >= e ? 'gap-gain' : 'gap-loss';
+        svg.push('<polygon class="' + cls + '" points="' +
+          x(s - 1) + ',' + y(r0) + ' ' + x(s) + ',' + y(r1) + ' ' + x(s) + ',' + y(e) + ' ' + x(s - 1) + ',' + y(e) + '"/>');
+      }
+
+      svg.push('<path class="exp" d="' + ePath + '"/>');
+      svg.push('<line class="rev" x1="' + x(0) + '" y1="' + y(0) + '" x2="' + x(n) + '" y2="' + y(rev) + '"/>');
+      // Drawn last so it still shows when it lies on the revenue line (premium = expected cost)
+      if (showExp) {
+        svg.push('<line class="expx" x1="' + x(0) + '" y1="' + y(0) + '" x2="' + x(n) + '" y2="' + y(p * cost * n) + '"/>');
+      }
+
+      // Profit bracket at the latest customer, with line labels to its right
+      var profit = rev - exp;
+      var pc = profit > 0 ? 'is-gain' : profit < 0 ? 'is-loss' : '';
+      var xr = x(n) + 14;
+      if (profit !== 0) {
+        svg.push('<line class="bracket ' + pc + '" x1="' + xr + '" x2="' + xr + '" y1="' + y(rev) + '" y2="' + y(exp) + '"/>');
+        svg.push('<line class="bracket ' + pc + '" x1="' + (xr - 6) + '" x2="' + xr + '" y1="' + y(rev) + '" y2="' + y(rev) + '"/>');
+        svg.push('<line class="bracket ' + pc + '" x1="' + (xr - 6) + '" x2="' + xr + '" y1="' + y(exp) + '" y2="' + y(exp) + '"/>');
+      }
+      var mid = (y(rev) + y(exp)) / 2;
+      svg.push('<text class="' + (pc || 'hint') + '" x="' + (xr + 10) + '" y="' + (mid + 6) + '">Profit ' + signed(profit) + '</text>');
+      out('chart').innerHTML = svg.join('');
+    }
+
+    function render() {
+      var premium = Number(slider.value);
+      var n = hist.length;
+      var k = hist.reduce(function (a, b) { return a + b; }, 0);
+      var revenue = premium * n;
+      var expense = k * cost;
+      var profit = revenue - expense;
+
+      out('premium').textContent = fmt(premium);
+      slider.style.setProperty('--ip-pct', pct(premium));
+      out('n').textContent = n;
+      out('k').textContent = k;
+      out('revenue').textContent = fmt(revenue);
+      out('expense').textContent = fmt(expense);
+      out('profit').textContent = signed(profit);
+      var box = out('profitbox');
+      box.classList.toggle('is-gain', profit > 0);
+      box.classList.toggle('is-loss', profit < 0);
+      root.querySelector('[data-act="undo"]').disabled = !n;
+      drawChart(premium);
+    }
+
+    slider.addEventListener('input', render);
+    // Arrow keys move the slider rather than changing slides; Enter/Escape hands focus back
+    slider.addEventListener('keydown', function (e) {
+      e.stopPropagation();
+      if (e.key === 'Enter' || e.key === 'Escape') slider.blur();
+    });
+
+    root.addEventListener('click', function (e) {
+      var b = e.target.closest('button[data-act]');
+      if (!b) return;
+      var act = b.dataset.act;
+      if (act === 'none') hist.push(0);
+      else if (act === 'claim') hist.push(1);
+      else if (act === 'undo') hist.pop();
+      else if (act === 'reset') {
+        if (hist.length && !window.confirm('Clear all customers?')) return;
+        hist.length = 0;
+      } else if (act === 'expected') {
+        var on = root.classList.toggle('show-expected');
+        b.textContent = on ? 'Hide expected expense' : 'Show expected expense';
+      }
+      b.blur(); // hand keyboard focus back to reveal.js so arrow keys still change slides
+      render();
+    });
+
+    render();
+  });
+})();
+</script>
+```

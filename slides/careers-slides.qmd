@@ -1,0 +1,30 @@
+## Who should consider an actuarial career?
+
+::: {.cards}
+::: {.card}
+You want an intellectually challenging degree
+:::
+::: {.card}
+Make a difference through numbers
+:::
+::: {.card}
+Real life application with great impact
+:::
+:::
+
+## What skills are needed for an actuarial career?
+
+::: {.cards}
+::: {.card}
+A strong foundation in mathematics
+:::
+::: {.card}
+Keen analytical & problem-solving skills
+:::
+::: {.card}
+Ability to communicate effectively
+:::
+::: {.card}
+Strong computing skills
+:::
+:::

@@ -1,0 +1,293 @@
+## Insure the Class: Scoreboard
+
+```{=html}
+<!--
+  Team scoreboard for "Insure the Class".
+  1. Type each team's name and premium (leave a premium blank to sit a team out).
+  2. Press "Lock premiums": customers are shared out. The cheapest team gets
+     every customer who shops on price; ties take turns.
+  3. Go through the customers one at a time: roll a real die and press
+     No claim / Claim, or press "Roll die" to let the page roll.
+  4. When every customer is done, the most profitable team is highlighted.
+
+  Settings (on the .sb div below):
+    data-teams       number of team rows (default 6)
+    data-customers   customers in the market (default 20; also editable on the slide)
+    data-claim-cost  cost of one claim in dollars (default 600)
+    data-die         sides on the die (default 6)
+    data-claim-max   a roll at or below this is a claim (default 1, i.e. 1 in 6)
+    data-loyal       customers each team keeps whatever its price (default 0:
+                     everyone goes to the cheapest insurer, as in the proposal)
+-->
+<div class="sb" data-teams="6" data-customers="20" data-claim-cost="600" data-die="6" data-claim-max="1" data-loyal="0">
+  <table class="sb-table">
+    <thead>
+      <tr><th>Team</th><th>Premium</th><th>Customers</th><th>Claims</th><th>Revenue</th><th>Expense</th><th>Profit</th></tr>
+    </thead>
+    <tbody data-out="rows"></tbody>
+  </table>
+
+  <div class="sb-status" data-out="status"></div>
+
+  <div class="sb-tools">
+    <button type="button" class="sb-btn sb-none" data-act="none">No claim</button>
+    <button type="button" class="sb-btn sb-claim" data-act="claim">Claim</button>
+    <button type="button" class="sb-btn sb-roll" data-act="roll">Roll die</button>
+    <span class="sb-roll-out" data-out="roll"></span>
+    <span class="sb-spacer"></span>
+    <label class="sb-n">Customers <input type="number" class="sb-in sb-n-in" data-out="ncust" min="1" step="1"></label>
+    <button type="button" class="sb-small" data-act="undo">Undo</button>
+    <button type="button" class="sb-small sb-lock" data-act="lock">Lock premiums</button>
+  </div>
+</div>
+
+<style>
+.reveal .sb {
+  --sb-ok: #1d6b52;
+  --sb-bad: #a8322a;
+  --sb-accent: #24476b;
+  --sb-gold: #be830e;       /* $anu-gold in custom.scss */
+  --sb-cream: #f5edde;      /* $anu-cream in custom.scss */
+  --sb-line: rgba(0, 0, 0, 0.15);
+  --sb-line: color-mix(in srgb, currentColor 16%, transparent);
+  text-align: left;
+  font-variant-numeric: tabular-nums;
+}
+.reveal .sb .sb-table { width: 100%; border-collapse: collapse; font-size: 0.55em; margin: 0; table-layout: fixed; }
+.reveal .sb .sb-table th:first-child { width: 24%; }
+.reveal .sb .sb-table th:nth-child(2) { width: 14%; }
+.reveal .sb .sb-table th {
+  font-weight: 600; text-align: right; padding: 0.3em 0.6em;
+  border-bottom: 2px solid var(--sb-gold);
+}
+.reveal .sb .sb-table th:first-child { text-align: left; }
+.reveal .sb .sb-table td {
+  text-align: right; padding: 0.25em 0.6em; border-bottom: 1px solid var(--sb-line);
+  vertical-align: middle;
+}
+.reveal .sb .sb-table td:first-child { text-align: left; }
+.reveal .sb tr.is-out td { opacity: 0.4; }
+.reveal .sb tr.is-cheapest td:nth-child(2) { color: var(--sb-accent); font-weight: 700; }
+.reveal .sb tr.is-current { box-shadow: inset 4px 0 0 var(--sb-accent); }
+.reveal .sb tr.is-winner td { background: var(--sb-cream); font-weight: 700; }
+.reveal .sb tr.is-winner { box-shadow: inset 4px 0 0 var(--sb-gold); }
+.reveal .sb .sb-profit.is-gain { color: var(--sb-ok); font-weight: 700; }
+.reveal .sb .sb-profit.is-loss { color: var(--sb-bad); font-weight: 700; }
+.reveal .sb .sb-tag {
+  display: inline-block; margin-left: 0.5em; padding: 0.05em 0.5em; border-radius: 999px;
+  font-size: 0.8em; font-weight: 700; color: #fff; background: var(--sb-gold);
+}
+
+.reveal .sb .sb-in {
+  font: inherit; color: inherit; background: transparent;
+  border: 1.5px solid var(--sb-line); border-radius: 6px; padding: 0.15em 0.4em;
+  -moz-appearance: textfield;
+}
+.reveal .sb .sb-in::-webkit-outer-spin-button,
+.reveal .sb .sb-in::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.reveal .sb .sb-in:disabled { border-color: transparent; }
+.reveal .sb .sb-name { width: 9em; }
+.reveal .sb .sb-prem { width: 4.5em; text-align: right; }
+.reveal .sb .sb-cur { margin-right: 0.15em; opacity: 0.7; }
+
+.reveal .sb .sb-status { font-size: 0.6em; font-weight: 600; margin: 0.6em 0 0.4em; min-height: 1.5em; }
+.reveal .sb .sb-status .sb-who { color: var(--sb-accent); }
+.reveal .sb .sb-status .sb-win { color: var(--sb-gold); }
+
+.reveal .sb .sb-tools { display: flex; gap: 12px; align-items: center; }
+.reveal .sb .sb-spacer { flex: 1; }
+.reveal .sb .sb-btn {
+  font: inherit; font-size: 0.55em; font-weight: 700;
+  padding: 0.4em 1em; border: 2.5px solid currentColor; border-radius: 12px;
+  background: transparent; cursor: pointer;
+}
+.reveal .sb .sb-none  { color: var(--sb-ok); }
+.reveal .sb .sb-claim { color: var(--sb-bad); }
+.reveal .sb .sb-roll  { color: var(--sb-accent); }
+.reveal .sb .sb-btn:hover { background: color-mix(in srgb, currentColor 9%, transparent); }
+.reveal .sb .sb-roll-out { font-size: 0.5em; font-weight: 700; min-width: 7em; }
+.reveal .sb .sb-n { font-size: 0.42em; display: flex; align-items: center; gap: 0.5em; }
+.reveal .sb .sb-n-in { width: 3.5em; text-align: right; }
+.reveal .sb .sb-small {
+  font: inherit; font-size: 0.42em; padding: 0.35em 0.9em; color: inherit;
+  border: 1.5px solid var(--sb-line); border-radius: 8px; background: transparent; cursor: pointer;
+}
+.reveal .sb .sb-lock { font-weight: 700; border-color: var(--sb-accent); color: var(--sb-accent); }
+.reveal .sb button:disabled { opacity: 0.35; cursor: default; }
+.reveal .sb button:focus-visible, .reveal .sb .sb-in:focus-visible { outline: 3px solid var(--sb-accent); outline-offset: 2px; }
+</style>
+
+<script>
+(function () {
+  var money = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', maximumFractionDigits: 0 });
+  var fmt = function (v) { return money.format(v); };
+  var signed = function (v) { return (v > 0 ? '+' : '') + fmt(v); };
+
+  document.querySelectorAll('.sb:not([data-ready])').forEach(function (root) {
+    root.dataset.ready = '1';
+    var nTeams = Number(root.dataset.teams) || 6;
+    var cost = Number(root.dataset.claimCost) || 600;
+    var die = Number(root.dataset.die) || 6;
+    var claimMax = Number(root.dataset.claimMax) || 1;
+    var loyal = Number(root.dataset.loyal) || 0;
+    var out = function (name) { return root.querySelector('[data-out="' + name + '"]'); };
+    var nIn = out('ncust');
+    nIn.value = Number(root.dataset.customers) || 20;
+
+    var locked = false;
+    var assign = [];   // team index for each customer, in the order they are rolled
+    var results = [];  // 1 = claim, 0 = no claim, for customers done so far
+    var lastRoll = null;
+
+    var teams = [];
+    for (var t = 0; t < nTeams; t++) {
+      var tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td><input class="sb-in sb-name" type="text" value="Team ' + (t + 1) + '" aria-label="Team ' + (t + 1) + ' name"></td>' +
+        '<td><span class="sb-cur">$</span><input class="sb-in sb-prem" type="number" min="0" step="1" inputmode="numeric" aria-label="Team ' + (t + 1) + ' premium"></td>' +
+        '<td class="sb-c"></td><td class="sb-k"></td><td class="sb-rev"></td><td class="sb-exp"></td><td class="sb-profit"></td>';
+      out('rows').appendChild(tr);
+      teams.push({
+        row: tr,
+        name: tr.querySelector('.sb-name'),
+        prem: tr.querySelector('.sb-prem'),
+        c: tr.querySelector('.sb-c'), k: tr.querySelector('.sb-k'),
+        rev: tr.querySelector('.sb-rev'), exp: tr.querySelector('.sb-exp'), profit: tr.querySelector('.sb-profit')
+      });
+    }
+
+    var premiumOf = function (t) {
+      var v = teams[t].prem.value.trim();
+      return v === '' || isNaN(Number(v)) ? null : Math.max(0, Number(v));
+    };
+    var nameOf = function (t) { return teams[t].name.value.trim() || 'Team ' + (t + 1); };
+    var esc = function (s) { return s.replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+
+    function lock() {
+      var playing = [];
+      teams.forEach(function (_, t) { if (premiumOf(t) !== null) playing.push(t); });
+      if (!playing.length) { window.alert('Enter at least one premium first.'); return; }
+      var n = Math.max(1, Math.round(Number(nIn.value) || 20));
+      nIn.value = n;
+      assign = [];
+      // Loyal customers stay with each team; everyone else goes to the cheapest, ties taking turns
+      var each = Math.min(loyal, Math.floor(n / playing.length));
+      for (var r = 0; r < each; r++) playing.forEach(function (t) { assign.push(t); });
+      var minP = Math.min.apply(null, playing.map(premiumOf));
+      var cheapest = playing.filter(function (t) { return premiumOf(t) === minP; });
+      for (var i = 0; assign.length < n; i++) assign.push(cheapest[i % cheapest.length]);
+      results = [];
+      lastRoll = null;
+      locked = true;
+    }
+
+    function unlock() {
+      if (results.length && !window.confirm('Unlock premiums and clear the claims so far?')) return;
+      locked = false;
+      assign = [];
+      results = [];
+      lastRoll = null;
+    }
+
+    function record(c) {
+      if (locked && results.length < assign.length) results.push(c);
+    }
+
+    function render() {
+      var done = locked && results.length === assign.length;
+      var stats = teams.map(function (_, t) {
+        var p = premiumOf(t), c = 0, k = 0;
+        assign.forEach(function (a, i) {
+          if (a !== t) return;
+          c++;
+          if (i < results.length && results[i]) k++;
+        });
+        return { p: p, c: c, k: k, rev: (p || 0) * c, exp: k * cost, profit: (p || 0) * c - k * cost };
+      });
+      var playing = stats.map(function (s, t) { return t; }).filter(function (t) { return stats[t].p !== null; });
+      var minP = playing.length ? Math.min.apply(null, playing.map(function (t) { return stats[t].p; })) : null;
+      var best = done ? Math.max.apply(null, playing.map(function (t) { return stats[t].profit; })) : null;
+      var current = locked && !done ? assign[results.length] : null;
+
+      teams.forEach(function (tm, t) {
+        var s = stats[t];
+        var out_ = s.p === null;
+        tm.name.disabled = false;
+        tm.prem.disabled = locked;
+        tm.row.classList.toggle('is-out', locked && out_);
+        tm.row.classList.toggle('is-cheapest', locked && !out_ && s.p === minP);
+        tm.row.classList.toggle('is-current', current === t);
+        tm.row.classList.toggle('is-winner', done && best > 0 && !out_ && s.profit === best);
+        var show = locked && !out_;
+        tm.c.textContent = show ? s.c : '';
+        tm.k.textContent = show ? s.k : '';
+        tm.rev.textContent = show ? fmt(s.rev) : '';
+        tm.exp.textContent = show ? fmt(s.exp) : '';
+        tm.profit.innerHTML = show ? signed(s.profit) + (done && best > 0 && s.profit === best ? '<span class="sb-tag">Winner</span>' : '') : '';
+        tm.profit.classList.toggle('is-gain', show && s.profit > 0);
+        tm.profit.classList.toggle('is-loss', show && s.profit < 0);
+      });
+
+      // Share the results so other slides (e.g. a winner announcement) can show them
+      root.sbState = {
+        locked: locked, done: done, best: best, remaining: assign.length - results.length,
+        teams: playing.map(function (t) {
+          return { name: nameOf(t), premium: stats[t].p, customers: stats[t].c, claims: stats[t].k, profit: stats[t].profit };
+        })
+      };
+      root.dispatchEvent(new CustomEvent('sb-change', { bubbles: true }));
+
+      var status = out('status');
+      if (!locked) {
+        status.textContent = 'Type each team’s premium, then lock them in.';
+      } else if (!done) {
+        status.innerHTML = 'Customer ' + (results.length + 1) + ' of ' + assign.length +
+          ' → <span class="sb-who">' + esc(nameOf(current)) + '</span>';
+      } else {
+        var top = playing.filter(function (t) { return stats[t].profit === best; });
+        var winners = top.map(function (t) { return esc(nameOf(t)); });
+        if (best <= 0) {
+          // Nobody made money; teams that sold nothing tie on $0 rather than "winning"
+          status.innerHTML = 'No insurer made a profit. Best result: <span class="sb-win">' + winners.join(', ') +
+            '</span> on ' + fmt(best) + '.';
+        } else {
+          status.innerHTML = '<span class="sb-win">' + (winners.length > 1 ? 'Joint winners: ' : 'Winner: ') +
+            winners.join(', ') + '</span> with ' + signed(best) + ' profit';
+        }
+      }
+
+      out('roll').textContent = lastRoll === null ? '' : 'Rolled ' + lastRoll + (lastRoll <= claimMax ? ' → claim' : ' → no claim');
+      ['none', 'claim', 'roll'].forEach(function (a) { root.querySelector('[data-act="' + a + '"]').disabled = !locked || done; });
+      root.querySelector('[data-act="undo"]').disabled = !results.length;
+      root.querySelector('[data-act="lock"]').textContent = locked ? 'Change premiums' : 'Lock premiums';
+      nIn.disabled = locked;
+    }
+
+    root.querySelector('.sb-tools').addEventListener('click', function (e) {
+      var b = e.target.closest('button[data-act]');
+      if (!b || b.disabled) return;
+      var act = b.dataset.act;
+      if (act === 'none') { lastRoll = null; record(0); }
+      else if (act === 'claim') { lastRoll = null; record(1); }
+      else if (act === 'roll') { lastRoll = 1 + Math.floor(Math.random() * die); record(lastRoll <= claimMax ? 1 : 0); }
+      else if (act === 'undo') { results.pop(); lastRoll = null; }
+      else if (act === 'lock') { if (locked) unlock(); else lock(); }
+      b.blur(); // keep reveal.js arrow-key navigation working
+      render();
+    });
+
+    // Typing in a box shouldn't trigger reveal.js shortcuts; Enter finishes the entry
+    root.addEventListener('keydown', function (e) {
+      if (!e.target.classList.contains('sb-in')) return;
+      e.stopPropagation();
+      if (e.key === 'Enter' || e.key === 'Escape') e.target.blur();
+    });
+    root.addEventListener('input', function (e) {
+      if (e.target.classList.contains('sb-name')) render();
+    });
+
+    render();
+  });
+})();
+</script>
+```

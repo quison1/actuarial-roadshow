@@ -1,0 +1,30 @@
+## What to do now
+
+:::: {.columns}
+::: {.column width="62%"}
+::: {.pillars}
+::: {.pillar}
+**Keep going with maths**
+
+Entry 2027: selection rank of 92 + Maths requirement
+:::
+::: {.pillar}
+**Explore the Bachelor of Actuarial Studies**
+
+Scan the code, or visit [programsandcourses.anu.edu.au/program/BACTS](https://programsandcourses.anu.edu.au/program/BACTS).
+:::
+::: {.pillar}
+**Look up the profession**
+
+Find out more from the Actuaries Institute at [actuaries.asn.au](https://www.actuaries.asn.au).
+:::
+:::
+:::
+::: {.column width="38%"}
+![](images/qr-bacts.png){.qr fig-alt="QR code linking to the ANU Bachelor of Actuarial Studies program page"}
+:::
+::::
+
+::: {.notes}
+About 1 min. Leave this slide up while students leave or ask questions.
+:::

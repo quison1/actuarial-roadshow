@@ -1,0 +1,253 @@
+## Phone insurance: premium vs claims
+
+```{=html}
+<!--
+  Claim tracker with a premium for "Insure the Class" (gauge version).
+  Set the premium with the slider, then record each customer as No claim or
+  Claim (roll a die: a 1 is a claim). Shows revenue (premium x customers),
+  expense (claim costs) and profit, plus a gauge comparing the average cost
+  per customer with the premium. "Show expected cost" marks claim chance x
+  claim cost on the gauge.
+
+  Two versions of this slide are kept: round1-premium-slide.qmd (used by the
+  decks) and round1-premium-slide.qmd.bak (the other one). To switch, swap
+  the two file names and re-render.
+
+  Settings (on the .ip div below):
+    data-claim-cost  cost of one claim in dollars; also the slider maximum (default 600)
+    data-claim-prob  chance a customer claims, as a decimal or fraction (default 1/6)
+    data-premium     starting premium per customer (default 100)
+    data-step        slider step in dollars (default 5)
+
+  Uses its own class names (ip-*) so it can sit in the same deck as the
+  original .ig claim tracker without the two scripts interfering.
+-->
+<div class="ip" data-claim-cost="600" data-claim-prob="1/6" data-premium="100" data-step="5">
+  <div class="ip-actions">
+    <button type="button" class="ip-btn ip-none" data-act="none">No claim</button>
+    <button type="button" class="ip-btn ip-claim" data-act="claim">Claim <span class="ip-btn-sub" data-out="costlabel">$600</span></button>
+  </div>
+
+  <label class="ip-premium">
+    <span class="ip-premium-lab">Premium per customer</span>
+    <input type="range" class="ip-slider" data-out="slider" min="0" max="600" step="5" value="100">
+    <span class="ip-premium-val" data-out="premium">$100</span>
+  </label>
+
+  <div class="ip-stats">
+    <div class="ip-stat"><div class="ip-num" data-out="n">0</div><div class="ip-lab">Customers · <span data-out="k">0</span> claims <span data-out="rate"></span></div></div>
+    <div class="ip-stat"><div class="ip-num" data-out="revenue">$0</div><div class="ip-lab">Revenue (premiums)</div></div>
+    <div class="ip-stat"><div class="ip-num" data-out="expense">$0</div><div class="ip-lab">Expense (claim costs)</div></div>
+    <div class="ip-stat ip-key" data-out="profitbox"><div class="ip-num" data-out="profit">$0</div><div class="ip-lab">Profit</div></div>
+  </div>
+
+  <div class="ip-gauge">
+    <div class="ip-gauge-lab">Average cost per customer <b data-out="avg">–</b></div>
+    <div class="ip-track">
+      <div class="ip-fill" data-out="fill"></div>
+      <div class="ip-tick ip-prem-tick" data-out="premtick"><span></span></div>
+      <div class="ip-tick ip-expected" data-out="exptick"><span></span></div>
+    </div>
+    <div class="ip-scale"><span>$0</span><span data-out="max">$600</span></div>
+  </div>
+
+  <div class="ip-dots" data-out="dots" aria-label="Outcomes so far: green no claim, red claim"></div>
+
+  <div class="ip-tools">
+    <button type="button" class="ip-small" data-act="expected">Show expected cost</button>
+    <span class="ip-spacer"></span>
+    <button type="button" class="ip-small" data-act="undo">Undo</button>
+    <button type="button" class="ip-small" data-act="reset">Reset</button>
+  </div>
+</div>
+
+<style>
+.reveal .ip {
+  --ip-ok: #1d6b52;
+  --ip-bad: #a8322a;
+  --ip-accent: #24476b;
+  --ip-gold: #be830e; /* ANU gold, $anu-gold in custom.scss */
+  --ip-gold-light: #dfc187; /* $anu-gold-light in custom.scss */
+  --ip-line: rgba(0, 0, 0, 0.15);
+  --ip-line: color-mix(in srgb, currentColor 16%, transparent);
+  text-align: left;
+  font-variant-numeric: tabular-nums;
+  margin-top: 0.2em;
+}
+.reveal .ip .ip-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.reveal .ip .ip-btn {
+  font: inherit; font-size: 0.95em; font-weight: 700;
+  padding: 0.4em 0.8em; border: 3px solid; border-radius: 14px;
+  background: transparent; cursor: pointer;
+  display: flex; align-items: baseline; justify-content: center; gap: 0.45em;
+  transition: transform 0.08s, background-color 0.15s;
+}
+.reveal .ip .ip-none  { color: var(--ip-ok); }
+.reveal .ip .ip-claim { color: var(--ip-bad); }
+.reveal .ip .ip-btn:hover  { background: color-mix(in srgb, currentColor 9%, transparent); }
+.reveal .ip .ip-btn:active { transform: scale(0.97); }
+.reveal .ip button:focus-visible, .reveal .ip .ip-slider:focus-visible { outline: 3px solid var(--ip-accent); outline-offset: 3px; }
+.reveal .ip .ip-btn-sub { font-weight: 400; font-size: 0.6em; opacity: 0.85; }
+
+.reveal .ip .ip-premium { display: flex; align-items: center; gap: 20px; margin: 20px 0 4px; }
+.reveal .ip .ip-premium-lab { font-size: 0.55em; font-weight: 700; white-space: nowrap; }
+.reveal .ip .ip-slider {
+  flex: 1; height: 28px; cursor: pointer; background: transparent;
+  -webkit-appearance: none; appearance: none;
+}
+.reveal .ip .ip-slider::-webkit-slider-runnable-track {
+  height: 8px; border-radius: 4px;
+  /* gold up to the thumb, light gold after; --ip-pct is set by the script */
+  background: linear-gradient(to right, var(--ip-gold) var(--ip-pct, 0%), var(--ip-gold-light) var(--ip-pct, 0%));
+}
+.reveal .ip .ip-slider::-moz-range-track { height: 8px; border-radius: 4px; background: var(--ip-gold-light); }
+.reveal .ip .ip-slider::-moz-range-progress { height: 8px; border-radius: 4px; background: var(--ip-gold); }
+.reveal .ip .ip-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 24px; height: 24px; margin-top: -8px;
+  border-radius: 50%; background: var(--ip-gold); border: 0;
+}
+.reveal .ip .ip-slider::-moz-range-thumb { width: 24px; height: 24px; border-radius: 50%; background: var(--ip-gold); border: 0; }
+.reveal .ip .ip-premium-val { font-size: 1.1em; font-weight: 700; color: var(--ip-gold); min-width: 3.6em; text-align: right; }
+
+.reveal .ip .ip-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin: 16px 0 22px; }
+.reveal .ip .ip-stat { border-top: 3px solid var(--ip-line); padding-top: 8px; }
+.reveal .ip .ip-num { font-size: 1.2em; font-weight: 700; line-height: 1.1; }
+.reveal .ip .ip-lab { font-size: 0.45em; opacity: 0.75; margin-top: 4px; }
+.reveal .ip .ip-key { border-top-color: var(--ip-accent); }
+.reveal .ip .ip-key .ip-num { color: var(--ip-accent); }
+.reveal .ip .ip-key.is-gain { border-top-color: var(--ip-ok); }
+.reveal .ip .ip-key.is-gain .ip-num { color: var(--ip-ok); }
+.reveal .ip .ip-key.is-loss { border-top-color: var(--ip-bad); }
+.reveal .ip .ip-key.is-loss .ip-num { color: var(--ip-bad); }
+
+.reveal .ip .ip-gauge { margin-bottom: 14px; }
+.reveal .ip .ip-gauge-lab { font-size: 0.45em; margin-bottom: 26px; }
+.reveal .ip .ip-track { position: relative; height: 22px; border-radius: 11px; background: var(--ip-line); }
+.reveal .ip .ip-fill {
+  position: absolute; top: 0; bottom: 0; left: 0; width: 0;
+  border-radius: 11px; background: var(--ip-accent); transition: width 0.35s ease;
+}
+.reveal .ip .ip-tick {
+  position: absolute; top: -8px; bottom: -8px;
+  width: 3px; margin-left: -1.5px; background: currentColor;
+}
+.reveal .ip .ip-tick span {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  white-space: nowrap; font-size: 0.45em; font-weight: 700;
+}
+.reveal .ip .ip-prem-tick { background: var(--ip-gold); }
+.reveal .ip .ip-prem-tick span { bottom: 100%; padding-bottom: 2px; color: var(--ip-gold); }
+.reveal .ip .ip-expected { display: none; }
+.reveal .ip .ip-expected span { top: 100%; padding-top: 2px; }
+.reveal .ip.show-expected .ip-expected { display: block; }
+.reveal .ip .ip-scale { display: flex; justify-content: space-between; font-size: 0.42em; opacity: 0.65; margin-top: 4px; }
+
+.reveal .ip .ip-dots { display: flex; flex-wrap: wrap; gap: 5px; min-height: 14px; max-height: 52px; overflow: hidden; }
+.reveal .ip .ip-dot { width: 14px; height: 14px; border-radius: 50%; background: var(--ip-ok); }
+.reveal .ip .ip-dot.is-claim { background: var(--ip-bad); }
+
+.reveal .ip .ip-tools { display: flex; gap: 12px; align-items: center; margin-top: 12px; }
+.reveal .ip .ip-spacer { flex: 1; }
+.reveal .ip .ip-small {
+  font: inherit; font-size: 0.42em; padding: 0.35em 0.9em; color: inherit;
+  border: 1.5px solid var(--ip-line); border-radius: 8px; background: transparent; cursor: pointer;
+}
+.reveal .ip .ip-small:disabled { opacity: 0.35; cursor: default; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal .ip .ip-btn, .reveal .ip .ip-fill { transition: none; }
+}
+</style>
+
+<script>
+(function () {
+  var MAX_DOTS = 120;
+  var money = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', maximumFractionDigits: 0 });
+  var fmt = function (v) { return money.format(v); };
+
+  document.querySelectorAll('.ip:not([data-ready])').forEach(function (root) {
+    root.dataset.ready = '1';
+    var cost = Number(root.dataset.claimCost) || 600;
+    var prob = function (s, d) { var m = String(s || '').split('/'); var v = m.length === 2 ? Number(m[0]) / Number(m[1]) : Number(s); return v > 0 && v < 1 ? v : d; };
+    var expected = prob(root.dataset.claimProb, 1 / 6) * cost;
+    var hist = []; // 1 = claim, 0 = no claim
+    var out = function (name) { return root.querySelector('[data-out="' + name + '"]'); };
+    var pct = function (v) { return Math.max(0, Math.min(v / cost, 1)) * 100 + '%'; };
+
+    var slider = out('slider');
+    slider.max = cost;
+    slider.step = Number(root.dataset.step) || 5;
+    slider.value = Number(root.dataset.premium) || 0;
+
+    out('costlabel').textContent = fmt(cost);
+    out('max').textContent = fmt(cost);
+    var tick = out('exptick');
+    tick.style.left = pct(expected);
+    tick.querySelector('span').textContent = 'Expected ' + fmt(expected);
+
+    function render() {
+      var premium = Number(slider.value);
+      var n = hist.length;
+      var k = hist.reduce(function (a, b) { return a + b; }, 0);
+      var revenue = premium * n;
+      var expense = k * cost;
+      var profit = revenue - expense;
+
+      out('premium').textContent = fmt(premium);
+      slider.style.setProperty('--ip-pct', pct(premium));
+      var pt = out('premtick');
+      pt.style.left = pct(premium);
+      pt.querySelector('span').textContent = 'Premium ' + fmt(premium);
+
+      out('n').textContent = n;
+      out('k').textContent = k;
+      out('rate').textContent = n ? '(' + Math.round((100 * k) / n) + '%)' : '';
+      out('revenue').textContent = fmt(revenue);
+      out('expense').textContent = fmt(expense);
+      out('profit').textContent = (profit > 0 ? '+' : '') + fmt(profit);
+      var box = out('profitbox');
+      box.classList.toggle('is-gain', profit > 0);
+      box.classList.toggle('is-loss', profit < 0);
+      out('avg').textContent = n ? fmt(expense / n) : '–';
+      out('fill').style.width = n ? pct(expense / n) : '0';
+
+      var dots = out('dots');
+      dots.innerHTML = '';
+      hist.slice(-MAX_DOTS).forEach(function (c) {
+        var d = document.createElement('span');
+        d.className = 'ip-dot' + (c ? ' is-claim' : '');
+        dots.appendChild(d);
+      });
+      root.querySelector('[data-act="undo"]').disabled = !n;
+    }
+
+    slider.addEventListener('input', render);
+    // Arrow keys move the slider rather than changing slides; Enter/Escape hands focus back
+    slider.addEventListener('keydown', function (e) {
+      e.stopPropagation();
+      if (e.key === 'Enter' || e.key === 'Escape') slider.blur();
+    });
+
+    root.addEventListener('click', function (e) {
+      var b = e.target.closest('button[data-act]');
+      if (!b) return;
+      var act = b.dataset.act;
+      if (act === 'none') hist.push(0);
+      else if (act === 'claim') hist.push(1);
+      else if (act === 'undo') hist.pop();
+      else if (act === 'reset') {
+        if (hist.length && !window.confirm('Clear all customers?')) return;
+        hist.length = 0;
+      } else if (act === 'expected') {
+        var on = root.classList.toggle('show-expected');
+        b.textContent = on ? 'Hide expected cost' : 'Show expected cost';
+      }
+      b.blur(); // hand keyboard focus back to reveal.js so arrow keys still change slides
+      render();
+    });
+
+    render();
+  });
+})();
+</script>
+```

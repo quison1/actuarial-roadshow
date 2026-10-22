@@ -1,0 +1,75 @@
+## The Bachelor of Actuarial Studies at ANU
+
+:::: {.columns}
+::: {.column width="58%" .compact}
+- Details can be found [here](https://programsandcourses.anu.edu.au/program/BACTS).
+- Entry requirements (2026):
+  - ATAR = 92
+  - Mathematics = Specialist (major, required) / Specialist (major/minor, recommended)
+- ANU provides for potential [exemption](https://cbe.anu.edu.au/about/professional-organisations-and-accreditation/actuaries-institute-requirements) from the Foundation Program and half of the Actuary Program in Australia.
+- Centre of Actuarial Excellence and opportunity for University Earned Credit with the Society of Actuaries.
+:::
+::: {.column width="42%"}
+![](images/anu-students.png){.photo fig-alt="Three ANU students walking through a campus building"}
+:::
+::::
+
+## Industry experts
+
+:::: {.columns}
+::: {.column width="58%" .compact}
+- Our programs are designed with a primary goal to prepare you for the practical work of an actuary.
+- Most of the actuarial staff have worked commercially before coming to academia – we know what is involved to prepare you for working life and future exams, and we prepare students for that.
+- Feedback from employers about our graduates is excellent – ANU actuarial graduates are seen to be of a very high quality.
+:::
+::: {.column width="42%"}
+![](images/anu-classroom.png){.photo fig-alt="A small ANU class in discussion around a table"}
+:::
+::::
+
+## Academic Foundation
+
+::: {.pillars}
+::: {.pillar}
+**Research-led teaching**
+
+Teachers are active researchers publishing in top-tier journals, bringing the latest thinking into classrooms. Each course is taught by experts in their fields, drawing on a wealth of academics across many disciplines.
+:::
+::: {.pillar}
+**Flexibility on most programs**
+
+Pick and choose electives, minors and even majors.
+:::
+::: {.pillar}
+**Teaching innovations**
+
+Interactive lecture slides, oral assessment, group projects, and integrating AI in the classroom.
+:::
+:::
+
+## Practical Skill
+
+::: {.pillars}
+::: {.pillar}
+**Industry recognitions**
+
+Programs are well-structured with recognition by 12 professional bodies (AUS, U.S. and internationals).
+:::
+::: {.pillar}
+**Communication skills\***
+
+Group work, presentation, report writing and more.
+:::
+::: {.pillar}
+**Technical skills\***
+
+Programming and working alongside AI.
+:::
+::: {.pillar}
+**Extra Opportunities**
+
+Work-integrated programs, real-world case study competitions, managing real-world funds (A\$900,000), and professional qualifications.
+:::
+:::
+
+[\*Exposure to these skills vary by program and course.]{.source-line}

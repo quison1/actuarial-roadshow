@@ -1,0 +1,233 @@
+## How many gadgets do you own?
+
+```{=html}
+<!--
+  Gadget count survey with a Poisson fit.
+  Enter how many people own 0, 1, 2, ... gadgets (type a number or use - / +).
+  The bars update straight away, lambda is estimated by the sample mean
+  (the maximum likelihood estimate), and "Show Poisson fit" overlays the
+  fitted counts n * P(K = k).
+
+  Settings (on the .pz div below):
+    data-max-k   largest gadget count shown (default 10). People with more
+                 can be entered in the last column; they are counted at that value.
+-->
+<div class="pz" data-max-k="10">
+  <div class="pz-main">
+    <div class="pz-chart" data-out="chart"></div>
+    <div class="pz-side">
+      <div class="pz-stat"><div class="pz-num" data-out="n">0</div><div class="pz-lab">People</div></div>
+      <div class="pz-stat"><div class="pz-num" data-out="sum">0</div><div class="pz-lab">Gadgets in total</div></div>
+      <div class="pz-stat pz-key">
+        <div class="pz-num"><span class="pz-lambda">λ̂ =</span> <span data-out="lam">–</span></div>
+        <div class="pz-lab">Gadgets ÷ people</div>
+      </div>
+      <div class="pz-var">Variance <span data-out="var">–</span><br><span class="pz-note">A Poisson model expects this to be close to λ̂</span></div>
+    </div>
+  </div>
+  <div class="pz-tools">
+    <button type="button" class="pz-btn" data-act="fit">Show Poisson fit</button>
+    <span class="pz-legend"><i class="pz-key-bar"></i>Class data <i class="pz-key-fit"></i>Poisson fit</span>
+    <span class="pz-spacer"></span>
+    <button type="button" class="pz-small" data-act="reset">Reset</button>
+  </div>
+</div>
+
+<style>
+.reveal .pz {
+  --pz-accent: #24476b;
+  --pz-mark: #a8322a;
+  --pz-line: rgba(0, 0, 0, 0.15);
+  --pz-line: color-mix(in srgb, currentColor 16%, transparent);
+  text-align: left;
+  font-variant-numeric: tabular-nums;
+  margin-top: 0.2em;
+}
+.reveal .pz .pz-main { display: grid; grid-template-columns: 1fr 230px; gap: 28px; align-items: start; }
+
+.reveal .pz .pz-chart { display: flex; gap: 6px; }
+.reveal .pz .pz-col { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: stretch; }
+.reveal .pz .pz-plot { position: relative; height: 290px; border-bottom: 2px solid var(--pz-line); }
+.reveal .pz .pz-bar {
+  position: absolute; left: 12%; right: 12%; bottom: 0; height: 0;
+  background: var(--pz-accent); border-radius: 5px 5px 0 0;
+  transition: height 0.25s ease;
+}
+.reveal .pz .pz-val {
+  position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%);
+  font-size: 0.45em; font-weight: 700; padding-bottom: 3px; white-space: nowrap;
+}
+.reveal .pz .pz-fit {
+  display: none; position: absolute; left: 2%; right: 2%; height: 0;
+  border-top: 3px dashed var(--pz-mark); transition: bottom 0.25s ease;
+}
+.reveal .pz .pz-fit::after {
+  content: ""; position: absolute; left: 50%; top: -7.5px; width: 12px; height: 12px;
+  margin-left: -6px; border-radius: 50%; background: var(--pz-mark);
+}
+.reveal .pz.show-fit .pz-fit { display: block; }
+.reveal .pz .pz-k { text-align: center; font-size: 0.55em; font-weight: 700; margin: 6px 0 4px; }
+.reveal .pz .pz-exp {
+  visibility: hidden; text-align: center; font-size: 0.36em; color: var(--pz-mark);
+  font-weight: 700; min-height: 1.3em;
+}
+.reveal .pz.show-fit .pz-exp { visibility: visible; }
+.reveal .pz .pz-in {
+  width: 100%; box-sizing: border-box; font: inherit; font-size: 0.5em; text-align: center;
+  padding: 0.2em 0; border: 1.5px solid var(--pz-line); border-radius: 6px;
+  background: transparent; color: inherit; -moz-appearance: textfield;
+}
+.reveal .pz .pz-in::-webkit-outer-spin-button,
+.reveal .pz .pz-in::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.reveal .pz .pz-step { display: flex; gap: 3px; margin-top: 4px; }
+.reveal .pz .pz-step button {
+  flex: 1; font: inherit; font-size: 0.5em; line-height: 1.2; padding: 0.1em 0;
+  border: 1.5px solid var(--pz-line); border-radius: 6px; background: transparent;
+  color: inherit; cursor: pointer;
+}
+.reveal .pz .pz-step button:hover { background: color-mix(in srgb, currentColor 8%, transparent); }
+
+.reveal .pz .pz-side { display: flex; flex-direction: column; gap: 16px; }
+.reveal .pz .pz-stat { border-top: 3px solid var(--pz-line); padding-top: 6px; }
+.reveal .pz .pz-key { border-top-color: var(--pz-accent); }
+.reveal .pz .pz-num { font-size: 1.1em; font-weight: 700; line-height: 1.1; }
+.reveal .pz .pz-key .pz-num { color: var(--pz-accent); font-size: 1.3em; }
+.reveal .pz .pz-lambda { font-size: 0.7em; font-weight: 400; }
+.reveal .pz .pz-lab { font-size: 0.45em; opacity: 0.75; margin-top: 3px; }
+.reveal .pz .pz-var { font-size: 0.5em; }
+.reveal .pz .pz-var span[data-out] { font-weight: 700; }
+.reveal .pz .pz-note { font-size: 0.8em; opacity: 0.7; }
+
+.reveal .pz .pz-tools { display: flex; gap: 16px; align-items: center; margin-top: 14px; }
+.reveal .pz .pz-spacer { flex: 1; }
+.reveal .pz .pz-btn {
+  font: inherit; font-size: 0.5em; font-weight: 700; color: var(--pz-mark);
+  padding: 0.4em 1em; border: 2.5px solid currentColor; border-radius: 12px;
+  background: transparent; cursor: pointer;
+}
+.reveal .pz .pz-legend { font-size: 0.42em; opacity: 0.8; display: flex; align-items: center; gap: 6px; }
+.reveal .pz .pz-legend i { display: inline-block; width: 16px; height: 12px; margin-left: 10px; }
+.reveal .pz .pz-key-bar { background: var(--pz-accent); border-radius: 2px; }
+.reveal .pz .pz-key-fit { height: 0 !important; border-top: 3px dashed var(--pz-mark); }
+.reveal .pz .pz-small {
+  font: inherit; font-size: 0.42em; padding: 0.35em 0.9em; color: inherit;
+  border: 1.5px solid var(--pz-line); border-radius: 8px; background: transparent; cursor: pointer;
+}
+.reveal .pz button:focus-visible, .reveal .pz .pz-in:focus-visible { outline: 3px solid var(--pz-accent); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal .pz .pz-bar, .reveal .pz .pz-fit { transition: none; }
+}
+</style>
+
+<script>
+(function () {
+  function poissonPmf(k, lam) {
+    // e^-lam * lam^k / k!, computed in log space to stay stable
+    var logp = -lam + (k ? k * Math.log(lam) : 0);
+    for (var i = 2; i <= k; i++) logp -= Math.log(i);
+    return Math.exp(logp);
+  }
+
+  document.querySelectorAll('.pz:not([data-ready])').forEach(function (root) {
+    root.dataset.ready = '1';
+    var maxK = Number(root.dataset.maxK) || 10;
+    var chart = root.querySelector('[data-out="chart"]');
+    var out = function (name) { return root.querySelector('[data-out="' + name + '"]'); };
+    var counts = [];
+    var cols = [];
+
+    for (var k = 0; k <= maxK; k++) {
+      counts.push(0);
+      var col = document.createElement('div');
+      col.className = 'pz-col';
+      col.innerHTML =
+        '<div class="pz-plot"><div class="pz-bar"><span class="pz-val"></span></div><div class="pz-fit"></div></div>' +
+        '<div class="pz-k">' + k + '</div>' +
+        '<div class="pz-exp"></div>' +
+        '<input class="pz-in" type="number" min="0" step="1" inputmode="numeric" value="0" aria-label="People with ' + k + ' gadgets">' +
+        '<div class="pz-step"><button type="button" data-d="-1" aria-label="One fewer">−</button><button type="button" data-d="1" aria-label="One more">+</button></div>';
+      col.dataset.k = k;
+      chart.appendChild(col);
+      cols.push({
+        bar: col.querySelector('.pz-bar'),
+        val: col.querySelector('.pz-val'),
+        fit: col.querySelector('.pz-fit'),
+        exp: col.querySelector('.pz-exp'),
+        input: col.querySelector('.pz-in')
+      });
+    }
+
+    function render() {
+      var n = 0, sum = 0;
+      counts.forEach(function (c, k) { n += c; sum += k * c; });
+      var lam = n ? sum / n : 0;
+      var variance = 0;
+      if (n > 1) {
+        counts.forEach(function (c, k) { variance += c * (k - lam) * (k - lam); });
+        variance /= n - 1;
+      }
+      var fitted = counts.map(function (c, k) { return n && lam > 0 ? n * poissonPmf(k, lam) : 0; });
+      var showFit = root.classList.contains('show-fit');
+      var ymax = Math.max.apply(null, counts.concat(showFit ? fitted : [], [1])) * 1.15;
+
+      cols.forEach(function (col, k) {
+        col.bar.style.height = (100 * counts[k]) / ymax + '%';
+        col.val.textContent = counts[k] ? counts[k] : '';
+        col.fit.style.bottom = (100 * fitted[k]) / ymax + '%';
+        col.exp.textContent = n ? fitted[k].toFixed(1) : '';
+        if (document.activeElement !== col.input) col.input.value = counts[k];
+      });
+
+      out('n').textContent = n;
+      out('sum').textContent = sum;
+      out('lam').textContent = n ? lam.toFixed(2) : '–';
+      out('var').textContent = n > 1 ? variance.toFixed(2) : '–';
+    }
+
+    chart.addEventListener('click', function (e) {
+      var b = e.target.closest('button[data-d]');
+      if (!b) return;
+      var k = Number(b.closest('.pz-col').dataset.k);
+      counts[k] = Math.max(0, counts[k] + Number(b.dataset.d));
+      b.blur(); // keep reveal.js arrow-key navigation working
+      render();
+    });
+
+    chart.addEventListener('input', function (e) {
+      if (!e.target.classList.contains('pz-in')) return;
+      var k = Number(e.target.closest('.pz-col').dataset.k);
+      var v = parseInt(e.target.value, 10);
+      counts[k] = isNaN(v) || v < 0 ? 0 : v;
+      render();
+    });
+
+    // Typing in a box shouldn't trigger reveal.js shortcuts; Enter finishes the entry
+    chart.addEventListener('keydown', function (e) {
+      if (!e.target.classList.contains('pz-in')) return;
+      e.stopPropagation();
+      if (e.key === 'Enter' || e.key === 'Escape') e.target.blur();
+    });
+    chart.addEventListener('focusout', function (e) {
+      if (e.target.classList.contains('pz-in')) render();
+    });
+
+    root.querySelector('.pz-tools').addEventListener('click', function (e) {
+      var b = e.target.closest('button[data-act]');
+      if (!b) return;
+      if (b.dataset.act === 'fit') {
+        var on = root.classList.toggle('show-fit');
+        b.textContent = on ? 'Hide Poisson fit' : 'Show Poisson fit';
+      } else if (b.dataset.act === 'reset') {
+        if (counts.some(Boolean) && !window.confirm('Clear all the gadget counts?')) return;
+        counts = counts.map(function () { return 0; });
+      }
+      b.blur();
+      render();
+    });
+
+    render();
+  });
+})();
+</script>
+```

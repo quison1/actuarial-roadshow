@@ -1,0 +1,525 @@
+/*-- scss:defaults --*/
+
+// ---------------------------------------------------------------------------
+// ANU brand, lifted from template/Light_Master_ANU.potx (ppt/theme/theme1.xml,
+// colour scheme "ANU Colours" and font scheme "ANU Fonts"). Kept as named
+// variables so the provenance of every value is traceable.
+// ---------------------------------------------------------------------------
+$anu-gold:       #be830e;   // accent1, also hlink  -- the primary ANU gold
+$anu-gold-light: #dfc187;   // accent2
+$anu-cream:      #f5edde;   // accent3
+$anu-copper:     #be4e0e;   // accent4, also folHlink
+$anu-terracotta: #cb7352;   // accent5
+$anu-blush:      #f2dcd4;   // accent6
+$anu-ink:        #000000;   // dk1 / dk2
+
+// The ANU typeface. theme1.xml sets majorFont "Public Sans" (headings) and
+// minorFont "Public Sans Light" (body). Public Sans is installed system-wide
+// on this machine (Regular / Light / SemiBold + italics), so it renders in the
+// browser and in a Chrome print-to-PDF without a webfont request. Fallbacks
+// follow for any other machine.
+$font-family-sans-serif: "Public Sans", "Source Sans Pro", -apple-system, "Segoe UI", Helvetica, Arial, sans-serif !default;
+
+$body-bg: #ffffff;
+$body-color: #1c1c1c;
+$link-color: $anu-gold;
+
+$presentation-font-size-root: 30px;
+$presentation-font-family: $font-family-sans-serif;
+$presentation-heading-font: $font-family-sans-serif;
+$presentation-heading-color: $anu-ink;
+$presentation-heading-font-weight: 600;
+$presentation-h2-font-size: 1.5em;
+
+$presentation-line-height: 1.5;
+
+
+/*-- scss:rules --*/
+
+// ---------------------------------------------------------------------------
+// The ANU footer device, rebuilt from the master's own strip
+// (ppt/media/image1.png, 3000x84, kept at images/anu-footer-rule.png): a gold
+// hairline running the full width, interrupted by the crest at the right, with
+// the crest centred vertically on the line.
+//
+// The rule and the crest are drawn SEPARATELY on purpose. Blitting the whole
+// strip as one background means its box has to hold the source's 3000:84
+// aspect exactly, or the crest distorts -- and any height clamp breaks that.
+// Drawing the line in CSS and giving the crest its own fixed, natural-aspect
+// box means it cannot stretch at any viewport size, and it matches the fixed
+// pixel sizing Quarto already uses for the footer text and slide number.
+// ---------------------------------------------------------------------------
+$anu-rule-color:   #bd842b;   // sampled from the master strip at y=41
+$anu-crest-height: 28px;      // crest source is 72x84, so ~24px wide here
+$anu-crest-gap:    9px;       // white space masking the rule either side
+$anu-bar-inset:    10px;      // crest bottom, above the viewport bottom
+
+// Where the hairline sits: through the middle of the crest (half of 28px).
+$anu-rule-bottom:   $anu-bar-inset + 14px;
+// Footer text and slide number have to clear the whole device.
+$anu-chrome-bottom: $anu-bar-inset + $anu-crest-height + 8px;
+// The crest is 72x84, so at 28px tall it is exactly 24px wide; the box adds a
+// gap either side. Written out rather than divided so this file needs no
+// `@use "sass:math"`, which would have to precede everything Quarto prepends.
+$anu-crest-box:     24px + 2 * $anu-crest-gap;
+
+.reveal::before {
+  content: "";
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: $anu-rule-bottom;
+  height: 1px;
+  background-color: $anu-rule-color;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.reveal::after {
+  content: "";
+  position: fixed;
+  right: 14px;
+  bottom: $anu-bar-inset;
+  height: $anu-crest-height;
+  // Box is the crest plus a gap either side; the white fill masks the hairline
+  // so it stops short of the crest, as it does on the master.
+  width: $anu-crest-box;
+  background-color: $body-bg;
+  background-image: url("data:image/png;base64,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");
+  background-repeat: no-repeat;
+  background-position: center center;
+  // `auto 100%` scales the crest to the box height and leaves its width to
+  // follow the source aspect, so it can never be stretched.
+  background-size: auto 100%;
+  pointer-events: none;
+  z-index: 3;
+}
+
+// Quarto pins the footer at bottom:18px and the slide number at bottom:10px,
+// which would put both on top of the device. Lift them clear of it.
+//
+// These are matched as `div.footer` / `div.slide-number` deliberately. Quarto
+// ships plugins/support/footer.css, which is linked AFTER the compiled theme
+// and sets those offsets with the same specificity as a plain `.reveal .footer`
+// — so a same-specificity rule here loses the cascade and the text lands back
+// on top of the crest. Naming the element takes specificity to (0,2,1), which
+// wins over both footer.css and reveal's own base rule whatever the order.
+.reveal div.footer {
+  font-size: 0.4em;
+  opacity: 0.4;
+  bottom: $anu-chrome-bottom;
+}
+
+.reveal div.slide-number {
+  font-size: 0.5em;
+  opacity: 0.4;
+  background-color: transparent;
+  bottom: $anu-chrome-bottom;
+  right: 14px;
+}
+
+// Headings: quiet gold hairline beneath, no coloured type
+.reveal h2 {
+  border-bottom: 1px solid $anu-gold-light;
+  padding-bottom: 0.25em;
+  margin-bottom: 0.6em;
+  letter-spacing: -0.005em;
+}
+
+.reveal p {
+  margin-bottom: 0.6em;
+}
+
+.reveal ul {
+  margin-bottom: 0.8em;
+}
+
+.reveal ul li {
+  margin-bottom: 0.25em;
+}
+
+// Bullet markers in ANU gold
+.reveal ul li::marker {
+  color: $anu-gold;
+}
+
+// Screenshots: thin border, no shadow
+.reveal img {
+  border: 1px solid #dddddd;
+}
+
+// Caption line sitting under a stretched screenshot
+.reveal .r-stretch + p {
+  font-size: 0.8em;
+  margin-top: 0.5em;
+  text-align: center;
+}
+
+// Two-panel slides. Quarto's theme sets `div.columns{display:initial}`, which
+// computes to `display:inline` and collapses the panels into a single flow, so
+// the flex context has to be re-established here. `.reveal .columns` outranks
+// the bare `div.columns` on specificity. Widths (58% + 42%) sum to 100%, so no
+// gap — the theme already puts 0.5rem margins on the inner edges.
+.reveal .columns {
+  display: flex;
+  align-items: center;
+}
+
+// The one pull quote in the deck. Size and weight carry it; the ANU gold rule
+// is the only colour on the slide.
+.reveal .keyphrase {
+  font-size: 1.1em;
+  line-height: 1.4;
+  font-weight: 600;
+  border-left: 3px solid $anu-gold;
+  padding-left: 0.8em;
+}
+
+// Small caption sitting under a screenshot inside a column
+.reveal .caption-line {
+  display: block;
+  font-size: 0.72em;
+  margin-top: 0.5em;
+  text-align: center;
+  opacity: 0.75;
+}
+
+.reveal a {
+  text-decoration: none;
+  border-bottom: 1px solid rgba(190, 131, 14, 0.35);
+}
+
+.reveal strong {
+  font-weight: 600;
+}
+
+// Title slide restraint
+.reveal .title-slide h1 {
+  font-size: 1.9em;
+  margin-bottom: 0.2em;
+}
+
+.reveal .title-slide .subtitle {
+  font-size: 0.95em;
+  opacity: 0.7;
+  font-style: italic;
+  margin-bottom: 1.2em;
+}
+
+// ---------------------------------------------------------------------------
+// Actuarial roadshow additions
+// ---------------------------------------------------------------------------
+
+// Small source / footnote line under a table or list
+.reveal .source-line {
+  display: block;
+  font-size: 0.5em;
+  opacity: 0.7;
+  margin-top: 0.8em;
+}
+
+// Data table (Where do Actuaries work?)
+.reveal .table-slide table {
+  font-size: 0.62em;
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+.reveal .table-slide table th {
+  font-weight: 600;
+  border-bottom: 2px solid $anu-gold;
+}
+.reveal .table-slide table td,
+.reveal .table-slide table th {
+  padding: 0.28em 0.8em;
+}
+.reveal .table-slide table tbody tr:nth-child(odd) {
+  background: rgba($anu-cream, 0.6);
+}
+
+// Text cards replacing the illustrated circles on the careers slides
+.reveal .cards {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 28px;
+  margin-top: 1.4em;
+}
+.reveal .cards .card {
+  border-top: 4px solid $anu-gold;
+  background: $anu-cream;
+  padding: 1.1em 1em 1.3em;
+  font-size: 1.05em;
+  font-weight: 600;
+  line-height: 1.3;
+  min-height: 6em;
+}
+.reveal .cards .card p { margin: 0; }
+
+// Bullet slides beside a photo
+.reveal .compact {
+  font-size: 0.82em;
+}
+.reveal .compact ul ul {
+  font-size: 0.9em;
+}
+.reveal img.photo {
+  border: 0;
+  width: 100%;
+  max-height: 520px;
+  object-fit: cover;
+}
+
+// Labelled points (Academic Foundation / Practical Skill)
+.reveal .pillars {
+  display: grid;
+  gap: 0.75em;
+}
+.reveal .pillars .pillar {
+  border-left: 3px solid $anu-gold;
+  padding-left: 0.8em;
+  font-size: 0.9em;
+  line-height: 1.4;
+}
+.reveal .pillars .pillar p { margin: 0; }
+.reveal .pillars .pillar strong {
+  display: block;
+  font-size: 1.15em;
+  margin-bottom: 0.15em;
+}
+
+// Four cards in a 2 x 2 grid, with a bold heading and a short line each
+.reveal .cards.cards-2x2 {
+  grid-auto-flow: row;
+  grid-template-columns: 1fr 1fr;
+  margin-top: 0.6em;
+  gap: 22px;
+}
+.reveal .cards.cards-2x2 .card {
+  min-height: 0;
+  font-size: 0.72em;
+  font-weight: 400;
+  line-height: 1.4;
+  padding: 0.8em 1em 1em;
+}
+.reveal .cards.cards-2x2 .card strong {
+  display: block;
+  font-size: 1.2em;
+  margin-bottom: 0.3em;
+}
+
+// Exit quiz: question, then the answer revealed as a fragment
+.reveal .quiz .q {
+  margin-bottom: 0.9em;
+  font-size: 1em;
+}
+.reveal .quiz .q p { margin: 0; }
+.reveal .quiz .a {
+  margin-top: 0.25em;
+  padding-left: 0.8em;
+  border-left: 3px solid $anu-gold;
+  font-size: 0.9em;
+}
+
+// QR code on the closing slide
+.reveal img.qr {
+  border: 0;
+  width: 300px;
+  display: block;
+  margin: 0 auto;
+}
+
+// Divider before the backup slides
+.reveal .backup-title h2 {
+  border-bottom: 0;
+  opacity: 0.6;
+}
+
+// Three study paths on a left-to-right spectrum (business <-> theory)
+.reveal .spectrum {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 22px;
+  margin-top: 0.4em;
+  align-items: stretch;
+}
+.reveal .spectrum .path {
+  border-top: 4px solid $anu-gold-light;
+  background: rgba($anu-cream, 0.55);
+  padding: 0.7em 0.9em 0.9em;
+  font-size: 0.68em;
+  line-height: 1.4;
+}
+.reveal .spectrum .path p { margin: 0 0 0.4em; }
+.reveal .spectrum .path strong { display: block; font-size: 1.35em; line-height: 1.2; }
+.reveal .spectrum .path-tag {
+  display: inline-block;
+  font-size: 0.85em;
+  font-weight: 600;
+  opacity: 0.7;
+}
+.reveal .spectrum .path-here {
+  border-top-color: $anu-gold;
+  background: $anu-cream;
+}
+.reveal .spectrum .path-here .path-tag {
+  opacity: 1;
+  color: #fff;
+  background: $anu-gold;
+  border-radius: 999px;
+  padding: 0.05em 0.7em;
+}
+// Double-headed arrow under the three paths
+.reveal .spectrum-axis {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.9em;
+  padding-top: 0.5em;
+  font-size: 0.55em;
+  font-weight: 600;
+  opacity: 0.8;
+}
+.reveal .spectrum-axis::before {
+  content: "";
+  position: absolute; left: 10px; right: 10px; top: 0;
+  border-top: 2px solid $anu-gold;
+}
+.reveal .spectrum-axis::after {
+  content: "";
+  position: absolute; left: 0; right: 0; top: -6px; height: 14px;
+  background:
+    linear-gradient(to bottom right, transparent 50%, $anu-gold 50%) left top / 10px 7px no-repeat,
+    linear-gradient(to top right, transparent 50%, $anu-gold 50%) left bottom / 10px 7px no-repeat,
+    linear-gradient(to bottom left, transparent 50%, $anu-gold 50%) right top / 10px 7px no-repeat,
+    linear-gradient(to top left, transparent 50%, $anu-gold 50%) right bottom / 10px 7px no-repeat;
+}
+.reveal .spectrum-axis p { display: flex; justify-content: space-between; width: 100%; margin: 0; }
+
+// Pop-out callout (Flexible Double Degree), revealed as a fragment
+.reveal .fdd {
+  display: flex;
+  align-items: center;
+  gap: 0.7em;
+  width: fit-content;
+  margin: 1.1em auto 0;
+  padding: 0.6em 1.1em;
+  font-size: 0.75em;
+  background: #fff;
+  border: 2px solid $anu-gold;
+  border-radius: 12px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.14);
+}
+.reveal .fdd p { margin: 0; }
+.reveal .fdd .fdd-badge {
+  display: inline-block;
+  margin-right: 0.5em;
+  padding: 0.1em 0.6em;
+  border-radius: 8px;
+  background: $anu-gold;
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+// Career connection: game moment -> job, one row each
+.reveal .career-map {
+  display: grid;
+  grid-template-columns: 330px 1fr;
+  column-gap: 0;
+  row-gap: 16px;
+  margin-top: 0.2em;
+}
+.reveal .career-map .cm-game {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 0.5em 2.2em 0.5em 0.9em;
+  background: $anu-cream;
+  font-size: 0.7em;
+  font-weight: 600;
+  line-height: 1.3;
+  // arrow point into the job column
+  clip-path: polygon(0 0, calc(100% - 22px) 0, 100% 50%, calc(100% - 22px) 100%, 0 100%);
+}
+.reveal .career-map .cm-game p { margin: 0; }
+.reveal .career-map .cm-job {
+  border-left: 3px solid $anu-gold;
+  margin-left: 18px;
+  padding: 0.3em 0 0.3em 0.9em;
+  font-size: 0.72em;
+  line-height: 1.4;
+}
+.reveal .career-map .cm-job p { margin: 0; }
+.reveal .career-map .cm-job strong { display: block; font-size: 1.25em; margin-bottom: 0.1em; }
+
+// Row of small labels ("chips")
+.reveal .cm-more {
+  margin-top: 1.2em;
+  font-size: 0.62em;
+}
+.reveal .cm-more p { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0; }
+.reveal .cm-more .cm-lead { font-weight: 600; margin-right: 4px; }
+.reveal .cm-more .chip {
+  border: 1.5px solid $anu-gold-light;
+  border-radius: 999px;
+  padding: 0.15em 0.8em;
+  background: #fff;
+}
+
+// Backup slide: maths prerequisites by qualification (a long table)
+.reveal .req-table table {
+  font-size: 0.56em;
+}
+.reveal .req-table table td:first-child {
+  white-space: nowrap;
+}
+.reveal .req-table table td,
+.reveal .req-table table th {
+  padding: 0.3em 0.7em;
+  vertical-align: top;
+  line-height: 1.3;
+}
+
+// Title slide: two dice drawn as isometric polygons (a top face and two side
+// faces in ANU cream, light gold and gold), after the polygon block behind the
+// ACTL3142 title slide. The big die shows a 1 on top, the "claim" roll in the
+// game; the small one shows a 6. Each die is an inline SVG; pips are circles
+// in unit coordinates mapped onto each face by an affine matrix, so they
+// foreshorten with it. The face polygons are
+//   top   0,50 86.6,0 173.2,50 86.6,100
+//   left  0,50 86.6,100 86.6,200 0,150
+//   right 86.6,100 173.2,50 173.2,150 86.6,200
+$die-big:   url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 181.2 208'%3E%3Cg stroke='%23fff' stroke-width='3' stroke-linejoin='round'%3E%3Cpolygon points='0,50 86.6,0 173.2,50 86.6,100' fill='%23f5edde'/%3E%3Cpolygon points='0,50 86.6,100 86.6,200 0,150' fill='%23dfc187'/%3E%3Cpolygon points='86.6,100 173.2,50 173.2,150 86.6,200' fill='%23be830e'/%3E%3C/g%3E%3Cg transform='matrix(86.6 -50 86.6 50 0 50)' fill='%23be4e0e'%3E%3Ccircle cx='0.5' cy='0.5' r='0.15'/%3E%3C/g%3E%3Cg transform='matrix(86.6 50 0 100 0 50)' fill='%23fff'%3E%3Ccircle cx='0.27' cy='0.27' r='0.085'/%3E%3Ccircle cx='0.73' cy='0.73' r='0.085'/%3E%3C/g%3E%3Cg transform='matrix(86.6 -50 0 100 86.6 100)' fill='%23fff'%3E%3Ccircle cx='0.24' cy='0.24' r='0.085'/%3E%3Ccircle cx='0.5' cy='0.5' r='0.085'/%3E%3Ccircle cx='0.76' cy='0.76' r='0.085'/%3E%3C/g%3E%3C/svg%3E");
+$die-small: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 181.2 208'%3E%3Cg stroke='%23fff' stroke-width='3' stroke-linejoin='round'%3E%3Cpolygon points='0,50 86.6,0 173.2,50 86.6,100' fill='%23f5edde'/%3E%3Cpolygon points='0,50 86.6,100 86.6,200 0,150' fill='%23dfc187'/%3E%3Cpolygon points='86.6,100 173.2,50 173.2,150 86.6,200' fill='%23be830e'/%3E%3C/g%3E%3Cg transform='matrix(86.6 -50 86.6 50 0 50)' fill='%23be830e'%3E%3Ccircle cx='0.27' cy='0.22' r='0.085'/%3E%3Ccircle cx='0.27' cy='0.5' r='0.085'/%3E%3Ccircle cx='0.27' cy='0.78' r='0.085'/%3E%3Ccircle cx='0.73' cy='0.22' r='0.085'/%3E%3Ccircle cx='0.73' cy='0.5' r='0.085'/%3E%3Ccircle cx='0.73' cy='0.78' r='0.085'/%3E%3C/g%3E%3Cg transform='matrix(86.6 50 0 100 0 50)' fill='%23fff'%3E%3Ccircle cx='0.27' cy='0.27' r='0.085'/%3E%3Ccircle cx='0.27' cy='0.73' r='0.085'/%3E%3Ccircle cx='0.73' cy='0.27' r='0.085'/%3E%3Ccircle cx='0.73' cy='0.73' r='0.085'/%3E%3C/g%3E%3Cg transform='matrix(86.6 -50 0 100 86.6 100)' fill='%23fff'%3E%3Ccircle cx='0.25' cy='0.25' r='0.085'/%3E%3Ccircle cx='0.25' cy='0.75' r='0.085'/%3E%3Ccircle cx='0.5' cy='0.5' r='0.085'/%3E%3Ccircle cx='0.75' cy='0.25' r='0.085'/%3E%3Ccircle cx='0.75' cy='0.75' r='0.085'/%3E%3C/g%3E%3C/svg%3E");
+
+// Text on the left, the pair of dice on the right. The box is centred on the
+// title block, which reveal.js centres on the slide, so the dice stay put at
+// any window size or aspect ratio.
+.reveal .slides section#title-slide {
+  text-align: left;
+  padding-right: 400px;
+  box-sizing: border-box;
+}
+// Quarto centres the author block on its own; line it up with the title
+.reveal .slides section#title-slide .quarto-title-authors {
+  display: block;
+  margin: 0;
+}
+.reveal .slides section#title-slide .quarto-title-author {
+  padding: 0;
+  margin: 0;
+}
+.reveal .slides section#title-slide::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 50%;
+  width: 450px;
+  height: 480px;
+  transform: translateY(-50%);
+  background:
+    $die-small left bottom / auto 150px no-repeat,
+    $die-big right top / auto 400px no-repeat;
+  pointer-events: none;
+}

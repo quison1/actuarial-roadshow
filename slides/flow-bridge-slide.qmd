@@ -1,0 +1,23 @@
+## You just did a pricing actuary's job
+
+::: {.pillars}
+::: {.pillar .fragment}
+**You estimated how likely a claim is**
+
+Actuaries study data to measure risk: how many phones break, how many drivers crash, how long people live.
+:::
+::: {.pillar .fragment}
+**You set a price that covers claims, with room for bad luck**
+
+That is pricing: P-plate car insurance, health insurance, travel insurance.
+:::
+::: {.pillar .fragment}
+**You saw why more customers make results predictable**
+
+One person's future is uncertain; 10,000 people's futures are surprisingly predictable. That is how superannuation, life insurance and climate-risk planning work.
+:::
+:::
+
+::: {.notes}
+About 2 min. This is the turn from the game to careers. Point back at the scoreboard: the cheap team won customers but took on the risk.
+:::

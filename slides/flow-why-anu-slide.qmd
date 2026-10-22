@@ -1,0 +1,27 @@
+## Why actuarial studies or business programs at ANU?
+
+::: {.cards .cards-2x2}
+::: {.card .fragment}
+**A head start on qualifying**
+Actuarial and commercial programs recognised by 12 professional bodies in Australia, the U.S. and internationally.
+:::
+::: {.card .fragment}
+**Hands-on experience**
+
+Work-integrated programs, real-world case study competitions, and student managing a real-world fund of A\$900,000.
+:::
+::: {.card .fragment}
+**Taught by people who've done the job**
+
+Most of our actuarial staff worked commercially before joining ANU.
+:::
+::: {.card .fragment}
+**Research-led teaching**
+
+Each course is taught by experts in their fields, with research informing the curriculum.
+:::
+:::
+
+::: {.notes}
+About 2 min. Details for questions are in the backup slides: entry requirements, teaching, and the full skills list.
+:::

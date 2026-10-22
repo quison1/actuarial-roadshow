@@ -1,0 +1,29 @@
+## Quick quiz
+
+::: {.quiz}
+::: {.q}
+**1. What does an actuary do?**
+
+::: {.fragment .a}
+Uses data and maths to put a price on uncertainty, and to manage risk.
+:::
+:::
+::: {.q}
+**2. Why do insurers need many customers?**
+
+::: {.fragment .a}
+With more customers, the average cost becomes predictable.
+:::
+:::
+::: {.q}
+**3. Why can charging the expected cost ($100) still lose money?**
+
+::: {.fragment .a}
+It only breaks even *on average*. A few unlucky claims turn it into a loss, so premiums need a buffer.
+:::
+:::
+:::
+
+::: {.notes}
+About 3 min. Ask each question, take an answer from the room, then press next to reveal it.
+:::

@@ -1,0 +1,44 @@
+---
+title: "Can You Price the Future?"
+subtitle: "An interactive workshop on risk, data and the actuarial profession"
+author: "William Lim"
+institute: "Research School of Finance, Actuarial Studies and Statistics, CBE"
+date: "2026-10-08"
+date-format: "D MMMM YYYY"
+format:
+  revealjs:
+    theme: [default, ../custom.scss]
+    embed-resources: true
+    slide-number: c/t
+    progress: false
+    center: false
+    width: 1200
+    height: 700
+    transition: none
+    background-transition: none
+    incremental: false
+    fig-align: center
+    footer: "ANU Actuarial Roadshow"
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+{{< include ../slides/round1-rules-slide.qmd >}}
+
+{{< include ../slides/round1-scoreboard-slide.qmd >}}
+
+{{< include round1-premium-slide.qmd >}}
+
+{{< include ../slides/round1-distribution-slide.qmd >}}
+
+{{< include ../slides/round1-more-customers-slide.qmd >}}
+
+{{< include gadgets-poisson-slide.qmd >}}
+
+{{< include ../slides/where-actuaries-work-slide.qmd >}}
+
+{{< include ../slides/careers-slides.qmd >}}
+
+{{< include ../slides/anu-slides.qmd >}}

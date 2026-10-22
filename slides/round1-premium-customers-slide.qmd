@@ -1,0 +1,272 @@
+## Phone insurance: premium vs claims
+
+```{=html}
+<!--
+  Claim tracker with a fixed number of customers for "Insure the Class".
+  Type the number of customers and set the premium with the slider: the
+  premium collected (premium x customers) is known up front. Then record each
+  customer as No claim or Claim (roll a die: a 1 is a claim). The grid fills
+  in as outcomes are realised, and claim costs build up against the premium
+  already collected. Two bars on a shared scale compare premium collected
+  (gold) with claim cost (red).
+
+  Alternative to archive/round1-premium-slide.qmd. To use it, include this file in
+  the deck in place of that one and re-render.
+
+  Settings (on the .ipc div below):
+    data-claim-cost  cost of one claim in dollars; also the slider maximum (default 600)
+    data-customers   starting number of customers (default 20)
+    data-max         largest number of customers allowed (default 200)
+    data-premium     starting premium per customer (default 100)
+    data-step        slider step in dollars (default 5)
+
+  Uses its own class names (ipc-*) so it can sit in the same deck as the
+  other claim trackers without the scripts interfering.
+-->
+<div class="ipc" data-claim-cost="600" data-customers="20" data-max="200" data-premium="100" data-step="5">
+  <div class="ipc-inputs">
+    <label class="ipc-field">
+      <span class="ipc-field-lab">Customers</span>
+      <input type="number" class="ipc-count" data-out="count" min="1" max="200" step="1" value="20">
+    </label>
+    <label class="ipc-field ipc-premium">
+      <span class="ipc-field-lab">Premium per customer</span>
+      <input type="range" class="ipc-slider" data-out="slider" min="0" max="600" step="5" value="100">
+      <span class="ipc-premium-val" data-out="premium">$100</span>
+    </label>
+  </div>
+
+  <div class="ipc-stats">
+    <div class="ipc-stat ipc-rev"><div class="ipc-num" data-out="revenue">$0</div><div class="ipc-lab"><span data-out="n">0</span> customers × <span data-out="premium2">$0</span></div><div class="ipc-cap">Premium collected</div></div>
+    <div class="ipc-stat ipc-ok"><div class="ipc-num" data-out="none">0</div><div class="ipc-lab">× $0 = $0</div><div class="ipc-cap">No claim</div></div>
+    <div class="ipc-stat ipc-bad"><div class="ipc-num" data-out="claim">0</div><div class="ipc-lab">× <span data-out="cost">$600</span> = <span data-out="expense">$0</span></div><div class="ipc-cap">Claim</div></div>
+    <div class="ipc-stat ipc-key" data-out="profitbox"><div class="ipc-num" data-out="profit">$0</div><div class="ipc-lab"><span data-out="left">0</span> customers still to roll</div><div class="ipc-cap">Premium − claim cost</div></div>
+  </div>
+
+  <div class="ipc-bars">
+    <div class="ipc-bar-row ipc-bar-rev"><span class="ipc-bar-lab">Premium collected</span><div class="ipc-track"><div class="ipc-fill" data-out="revbar"></div></div><span class="ipc-bar-val" data-out="revval">$0</span></div>
+    <div class="ipc-bar-row ipc-bar-exp"><span class="ipc-bar-lab">Claim cost</span><div class="ipc-track"><div class="ipc-fill" data-out="expbar"></div></div><span class="ipc-bar-val" data-out="expval">$0</span></div>
+  </div>
+
+  <div class="ipc-actions">
+    <button type="button" class="ipc-btn ipc-none" data-act="none">No claim</button>
+    <button type="button" class="ipc-btn ipc-claim" data-act="claim">Claim <span class="ipc-btn-sub" data-out="costlabel">$600</span></button>
+  </div>
+
+  <div class="ipc-grid" data-out="grid" aria-label="Customers: grey still to roll, green no claim, red claim"></div>
+
+  <div class="ipc-tools">
+    <span class="ipc-spacer"></span>
+    <button type="button" class="ipc-small" data-act="undo">Undo</button>
+    <button type="button" class="ipc-small" data-act="reset">Reset</button>
+  </div>
+</div>
+
+<style>
+.reveal .ipc {
+  --ipc-ok: #1d6b52;
+  --ipc-bad: #a8322a;
+  --ipc-accent: #24476b;
+  --ipc-gold: #be830e; /* ANU gold, $anu-gold in custom.scss */
+  --ipc-gold-light: #dfc187; /* $anu-gold-light in custom.scss */
+  --ipc-line: rgba(0, 0, 0, 0.15);
+  --ipc-line: color-mix(in srgb, currentColor 16%, transparent);
+  text-align: left;
+  font-variant-numeric: tabular-nums;
+  margin-top: 0.2em;
+}
+.reveal .ipc .ipc-inputs { display: flex; align-items: center; gap: 40px; }
+.reveal .ipc .ipc-field { display: flex; align-items: center; gap: 16px; }
+.reveal .ipc .ipc-premium { flex: 1; }
+.reveal .ipc .ipc-field-lab { font-size: 0.55em; font-weight: 700; white-space: nowrap; }
+.reveal .ipc .ipc-count {
+  font: inherit; font-size: 0.9em; font-weight: 700; width: 3.6em;
+  padding: 0.1em 0.3em; color: var(--ipc-accent); text-align: right;
+  border: 2px solid var(--ipc-line); border-radius: 10px; background: transparent;
+}
+.reveal .ipc .ipc-slider {
+  flex: 1; height: 28px; cursor: pointer; background: transparent;
+  -webkit-appearance: none; appearance: none;
+}
+.reveal .ipc .ipc-slider::-webkit-slider-runnable-track {
+  height: 8px; border-radius: 4px;
+  /* gold up to the thumb, light gold after; --ipc-pct is set by the script */
+  background: linear-gradient(to right, var(--ipc-gold) var(--ipc-pct, 0%), var(--ipc-gold-light) var(--ipc-pct, 0%));
+}
+.reveal .ipc .ipc-slider::-moz-range-track { height: 8px; border-radius: 4px; background: var(--ipc-gold-light); }
+.reveal .ipc .ipc-slider::-moz-range-progress { height: 8px; border-radius: 4px; background: var(--ipc-gold); }
+.reveal .ipc .ipc-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 24px; height: 24px; margin-top: -8px;
+  border-radius: 50%; background: var(--ipc-gold); border: 0;
+}
+.reveal .ipc .ipc-slider::-moz-range-thumb { width: 24px; height: 24px; border-radius: 50%; background: var(--ipc-gold); border: 0; }
+.reveal .ipc .ipc-premium-val { font-size: 1.1em; font-weight: 700; color: var(--ipc-gold); min-width: 3.6em; text-align: right; }
+
+.reveal .ipc .ipc-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin: 18px 0 20px; }
+.reveal .ipc .ipc-stat { border-top: 3px solid var(--ipc-line); padding-top: 8px; }
+.reveal .ipc .ipc-num { font-size: 1.2em; font-weight: 700; line-height: 1.1; }
+.reveal .ipc .ipc-lab { font-size: 0.45em; opacity: 0.75; margin-top: 4px; }
+.reveal .ipc .ipc-cap { font-size: 0.5em; font-weight: 700; margin-top: 2px; }
+.reveal .ipc .ipc-rev { border-top-color: var(--ipc-gold); }
+.reveal .ipc .ipc-rev .ipc-num { color: var(--ipc-gold); }
+.reveal .ipc .ipc-ok { border-top-color: var(--ipc-ok); }
+.reveal .ipc .ipc-ok .ipc-num { color: var(--ipc-ok); }
+.reveal .ipc .ipc-bad { border-top-color: var(--ipc-bad); }
+.reveal .ipc .ipc-bad .ipc-num { color: var(--ipc-bad); }
+.reveal .ipc .ipc-key { border-top-color: var(--ipc-accent); }
+.reveal .ipc .ipc-key .ipc-num { color: var(--ipc-accent); }
+.reveal .ipc .ipc-key.is-gain { border-top-color: var(--ipc-ok); }
+.reveal .ipc .ipc-key.is-gain .ipc-num { color: var(--ipc-ok); }
+.reveal .ipc .ipc-key.is-loss { border-top-color: var(--ipc-bad); }
+.reveal .ipc .ipc-key.is-loss .ipc-num { color: var(--ipc-bad); }
+
+.reveal .ipc .ipc-bars { display: grid; gap: 10px; margin: -4px 0 18px; }
+.reveal .ipc .ipc-bar-row { display: grid; grid-template-columns: 7.5em 1fr 4.5em; align-items: center; gap: 14px; font-size: 0.5em; font-weight: 700; }
+.reveal .ipc .ipc-bar-val { text-align: right; }
+.reveal .ipc .ipc-track { position: relative; height: 26px; border-radius: 6px; background: var(--ipc-line); overflow: hidden; }
+.reveal .ipc .ipc-fill { position: absolute; top: 0; bottom: 0; left: 0; width: 0; border-radius: 6px; transition: width 0.35s ease; }
+.reveal .ipc .ipc-bar-rev { color: var(--ipc-gold); }
+.reveal .ipc .ipc-bar-rev .ipc-fill { background: var(--ipc-gold); }
+.reveal .ipc .ipc-bar-exp { color: var(--ipc-bad); }
+.reveal .ipc .ipc-bar-exp .ipc-fill { background: var(--ipc-bad); }
+
+.reveal .ipc .ipc-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.reveal .ipc .ipc-btn {
+  font: inherit; font-size: 0.9em; font-weight: 700;
+  padding: 0.35em 0.8em; border: 3px solid; border-radius: 14px;
+  background: transparent; cursor: pointer;
+  display: flex; align-items: baseline; justify-content: center; gap: 0.45em;
+  transition: transform 0.08s, background-color 0.15s;
+}
+.reveal .ipc .ipc-none  { color: var(--ipc-ok); }
+.reveal .ipc .ipc-claim { color: var(--ipc-bad); }
+.reveal .ipc .ipc-btn:hover:not(:disabled)  { background: color-mix(in srgb, currentColor 9%, transparent); }
+.reveal .ipc .ipc-btn:active:not(:disabled) { transform: scale(0.97); }
+.reveal .ipc .ipc-btn:disabled { opacity: 0.3; cursor: default; }
+.reveal .ipc button:focus-visible, .reveal .ipc input:focus-visible { outline: 3px solid var(--ipc-accent); outline-offset: 3px; }
+.reveal .ipc .ipc-btn-sub { font-weight: 400; font-size: 0.6em; opacity: 0.85; }
+
+.reveal .ipc .ipc-grid { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 18px; max-height: 96px; overflow: hidden; }
+.reveal .ipc .ipc-dot { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--ipc-line); box-sizing: border-box; }
+.reveal .ipc .ipc-dot.is-none  { background: var(--ipc-ok);  border-color: var(--ipc-ok); }
+.reveal .ipc .ipc-dot.is-claim { background: var(--ipc-bad); border-color: var(--ipc-bad); }
+
+.reveal .ipc .ipc-tools { display: flex; gap: 12px; align-items: center; margin-top: 12px; }
+.reveal .ipc .ipc-spacer { flex: 1; }
+.reveal .ipc .ipc-small {
+  font: inherit; font-size: 0.42em; padding: 0.35em 0.9em; color: inherit;
+  border: 1.5px solid var(--ipc-line); border-radius: 8px; background: transparent; cursor: pointer;
+}
+.reveal .ipc .ipc-small:disabled { opacity: 0.35; cursor: default; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal .ipc .ipc-btn, .reveal .ipc .ipc-fill { transition: none; }
+}
+</style>
+
+<script>
+(function () {
+  var money = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', maximumFractionDigits: 0 });
+  var fmt = function (v) { return money.format(v); };
+
+  document.querySelectorAll('.ipc:not([data-ready])').forEach(function (root) {
+    root.dataset.ready = '1';
+    var cost = Number(root.dataset.claimCost) || 600;
+    var maxN = Number(root.dataset.max) || 200;
+    var hist = []; // 1 = claim, 0 = no claim
+    var out = function (name) { return root.querySelector('[data-out="' + name + '"]'); };
+    var pct = function (v) { return Math.max(0, Math.min(v / cost, 1)) * 100 + '%'; };
+
+    var slider = out('slider');
+    slider.max = cost;
+    slider.step = Number(root.dataset.step) || 5;
+    slider.value = Number(root.dataset.premium) || 0;
+
+    var count = out('count');
+    count.max = maxN;
+    count.value = Number(root.dataset.customers) || 20;
+    var customers = function () {
+      // Never fewer customers than outcomes already recorded
+      var v = Math.round(Number(count.value)) || 0;
+      return Math.max(hist.length, Math.min(v, maxN));
+    };
+
+    out('costlabel').textContent = fmt(cost);
+    out('cost').textContent = fmt(cost);
+
+    function render() {
+      var premium = Number(slider.value);
+      var n = customers();
+      var done = hist.length;
+      var k = hist.reduce(function (a, b) { return a + b; }, 0);
+      var revenue = premium * n;
+      var expense = k * cost;
+      var profit = revenue - expense;
+
+      out('premium').textContent = fmt(premium);
+      slider.style.setProperty('--ipc-pct', pct(premium));
+
+      out('n').textContent = n;
+      out('premium2').textContent = fmt(premium);
+      out('revenue').textContent = fmt(revenue);
+      out('none').textContent = done - k;
+      out('claim').textContent = k;
+      out('expense').textContent = fmt(expense);
+      out('left').textContent = n - done;
+      out('profit').textContent = (profit > 0 ? '+' : '') + fmt(profit);
+      var box = out('profitbox');
+      box.classList.toggle('is-gain', profit > 0);
+      box.classList.toggle('is-loss', profit < 0);
+
+      // Both bars share one scale: the larger of the two fills the track
+      var top = Math.max(revenue, expense) || 1;
+      out('revbar').style.width = (100 * revenue) / top + '%';
+      out('expbar').style.width = (100 * expense) / top + '%';
+      out('revval').textContent = fmt(revenue);
+      out('expval').textContent = fmt(expense);
+
+      var grid = out('grid');
+      grid.innerHTML = '';
+      for (var i = 0; i < n; i++) {
+        var d = document.createElement('span');
+        d.className = 'ipc-dot' + (i < done ? (hist[i] ? ' is-claim' : ' is-none') : '');
+        grid.appendChild(d);
+      }
+
+      var full = done >= n;
+      root.querySelector('[data-act="none"]').disabled = full;
+      root.querySelector('[data-act="claim"]').disabled = full;
+      root.querySelector('[data-act="undo"]').disabled = !done;
+    }
+
+    slider.addEventListener('input', render);
+    count.addEventListener('input', render);
+    count.addEventListener('change', function () { count.value = customers(); render(); });
+    // Keys edit the inputs rather than changing slides; Enter/Escape hands focus back
+    [slider, count].forEach(function (el) {
+      el.addEventListener('keydown', function (e) {
+        e.stopPropagation();
+        if (e.key === 'Enter' || e.key === 'Escape') el.blur();
+      });
+    });
+
+    root.addEventListener('click', function (e) {
+      var b = e.target.closest('button[data-act]');
+      if (!b) return;
+      var act = b.dataset.act;
+      if (act === 'none') hist.push(0);
+      else if (act === 'claim') hist.push(1);
+      else if (act === 'undo') hist.pop();
+      else if (act === 'reset') {
+        if (hist.length && !window.confirm('Clear all outcomes?')) return;
+        hist.length = 0;
+      }
+      b.blur(); // hand keyboard focus back to reveal.js so arrow keys still change slides
+      render();
+    });
+
+    render();
+  });
+})();
+</script>
+```

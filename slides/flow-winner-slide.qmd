@@ -1,0 +1,97 @@
+## And the winning insurer is…
+
+```{=html}
+<!--
+  Winner announcement. Reads the results of the "Insure the Class: Scoreboard" slide
+  (its .sb block shares them as sbState and fires an "sb-change" event), so it
+  shows whatever was played earlier in the session. Nothing to set here.
+-->
+<div class="rc">
+  <div class="rc-hero" data-out="hero"></div>
+  <div class="rc-sub" data-out="sub"></div>
+  <div data-out="table"></div>
+</div>
+
+<style>
+.reveal .rc {
+  --rc-gold: #be830e;
+  --rc-cream: #f5edde;
+  --rc-ok: #1d6b52;
+  --rc-bad: #a8322a;
+  --rc-line: rgba(0, 0, 0, 0.15);
+  --rc-line: color-mix(in srgb, currentColor 16%, transparent);
+  text-align: left; font-variant-numeric: tabular-nums;
+}
+.reveal .rc .rc-hero { font-size: 2em; font-weight: 700; color: var(--rc-gold); line-height: 1.1; min-height: 1.1em; }
+.reveal .rc .rc-hero.is-muted { color: inherit; font-size: 1.2em; }
+.reveal .rc .rc-sub { font-size: 0.65em; margin: 0.4em 0 1em; min-height: 1.4em; }
+.reveal .rc .rc-table { width: 100%; border-collapse: collapse; font-size: 0.55em; }
+.reveal .rc .rc-table th { font-weight: 600; text-align: right; padding: 0.3em 0.6em; border-bottom: 2px solid var(--rc-gold); }
+.reveal .rc .rc-table td { text-align: right; padding: 0.3em 0.6em; border-bottom: 1px solid var(--rc-line); }
+.reveal .rc .rc-table th:first-child, .reveal .rc .rc-table td:first-child { text-align: left; }
+.reveal .rc .rc-table tr.is-winner td { background: var(--rc-cream); font-weight: 700; }
+.reveal .rc .is-gain { color: var(--rc-ok); font-weight: 700; }
+.reveal .rc .is-loss { color: var(--rc-bad); font-weight: 700; }
+</style>
+
+<script>
+(function () {
+  var money = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', maximumFractionDigits: 0 });
+  var fmt = function (v) { return money.format(v); };
+  var signed = function (v) { return (v > 0 ? '+' : v < 0 ? '−' : '') + fmt(Math.abs(v)); };
+  var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+
+  document.querySelectorAll('.rc:not([data-ready])').forEach(function (root) {
+    root.dataset.ready = '1';
+    var out = function (name) { return root.querySelector('[data-out="' + name + '"]'); };
+
+    function update() {
+      var sb = document.querySelector('.sb');
+      var st = sb && sb.sbState;
+      var hero = out('hero'), sub = out('sub'), table = out('table');
+      hero.classList.remove('is-muted');
+      if (!st || !st.locked) {
+        hero.classList.add('is-muted');
+        hero.textContent = 'No game played yet';
+        sub.textContent = 'Play the game on the scoreboard slide, and the results will appear here.';
+        table.innerHTML = '';
+        return;
+      }
+      if (!st.done) {
+        hero.classList.add('is-muted');
+        hero.textContent = 'Game still in progress';
+        sub.textContent = st.remaining + (st.remaining === 1 ? ' customer' : ' customers') + ' still to roll on the scoreboard slide.';
+      } else if (st.best > 0) {
+        var winners = st.teams.filter(function (t) { return t.profit === st.best; }).map(function (t) { return esc(t.name); });
+        hero.innerHTML = winners.join(' &amp; ');
+        sub.innerHTML = (winners.length > 1 ? 'Joint winners' : 'Winner') + ' with <b>' + signed(st.best) + '</b> profit';
+      } else {
+        hero.classList.add('is-muted');
+        hero.textContent = 'Nobody made a profit!';
+        sub.textContent = 'The cheapest insurer won the customers, but its premiums didn’t cover the claims.';
+      }
+      var teams = st.teams.slice().sort(function (a, b) { return b.profit - a.profit; });
+      var tbl = document.createElement('table');
+      tbl.className = 'rc-table';
+      tbl.innerHTML = '<thead><tr><th>Team</th><th>Premium</th><th>Customers</th><th>Claims</th><th>Profit</th></tr></thead><tbody>' +
+        teams.map(function (t) {
+          var win = st.done && st.best > 0 && t.profit === st.best;
+          var pc = t.profit > 0 ? 'is-gain' : t.profit < 0 ? 'is-loss' : '';
+          return '<tr' + (win ? ' class="is-winner"' : '') + '><td>' + esc(t.name) + '</td><td>' + fmt(t.premium) + '</td><td>' +
+            t.customers + '</td><td>' + t.claims + '</td><td class="' + pc + '">' + signed(t.profit) + '</td></tr>';
+        }).join('') + '</tbody>';
+      table.innerHTML = '';
+      table.appendChild(tbl);
+    }
+
+    document.addEventListener('sb-change', update);
+    if (window.Reveal && Reveal.on) Reveal.on('slidechanged', update);
+    update();
+  });
+})();
+</script>
+```
+
+::: {.notes}
+About 2 min. This slide fills itself in from the scoreboard. If the cheapest team lost money, ask the room why: they won every customer but charged too little to cover bad luck.
+:::

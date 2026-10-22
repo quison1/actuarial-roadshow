@@ -1,0 +1,17 @@
+## You might like this if…
+
+::: {.cards}
+::: {.card}
+You like maths, but want to see it *used*
+:::
+::: {.card}
+You'd rather solve puzzles where the answer actually matters
+:::
+::: {.card}
+You haven't picked an industry yet: actuaries work in insurance, super, health, climate, tech and more
+:::
+:::
+
+::: {.notes}
+About 1 min. Ask: "Who enjoyed setting the premium more than rolling the die?" Those are the future actuaries.
+:::

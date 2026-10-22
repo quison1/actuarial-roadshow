@@ -1,0 +1,79 @@
+## Where do actuaries work (Australia)?
+
+```{=html}
+<!--
+  Headline stat with one supporting bar chart, from the Actuaries Institute
+  member figures (full table on the backup slide "Where do Actuaries work?").
+  Bars show the share of members who list each area as a SECONDARY area of
+  work; Data Science & AI is highlighted. Hover a bar for members and primary %.
+-->
+<div class="wa">
+  <div class="wa-hero">
+    <div class="wa-big">1 in 3</div>
+    <div class="wa-text">actuaries also work in <b>data science &amp; AI</b></div>
+    <div class="wa-sub">35% list it as at least a secondary area of work.</div>
+  </div>
+  <div class="wa-chart">
+    <div class="wa-title">Share of actuaries in each area of (primary and secondary) work</div>
+    <div class="wa-rows" data-out="rows"></div>
+  </div>
+</div>
+<div class="wa-source">Source: <a href="https://www.actuaries.asn.au/about-us/year-in-review-and-financial-statements">Actuaries Institute, Year in review</a></div>
+
+<style>
+.reveal .wa {
+  --wa-gold: #be830e;
+  --wa-bar: #8a97a6;
+  --wa-line: rgba(0, 0, 0, 0.15);
+  --wa-line: color-mix(in srgb, currentColor 16%, transparent);
+  display: grid; grid-template-columns: 340px 1fr; gap: 40px; align-items: center;
+  text-align: left; font-variant-numeric: tabular-nums;
+}
+.reveal .wa .wa-big { font-size: 2.8em; font-weight: 700; color: var(--wa-gold); line-height: 1; }
+.reveal .wa .wa-text { font-size: 0.95em; font-weight: 600; line-height: 1.3; margin-top: 0.3em; }
+.reveal .wa .wa-text b { font-weight: 700; }
+.reveal .wa .wa-sub { font-size: 0.65em; opacity: 0.75; margin-top: 0.8em; line-height: 1.4; }
+.reveal .wa .wa-title { font-size: 0.55em; font-weight: 700; margin-bottom: 10px; }
+.reveal .wa .wa-rows { display: grid; grid-template-columns: 10em 1fr 3em; column-gap: 12px; row-gap: 4px; font-size: 0.58em; }
+.reveal .wa .wa-lab { align-self: center; text-align: right; }
+.reveal .wa .wa-lab.is-hi, .reveal .wa .wa-val.is-hi { font-weight: 700; }
+.reveal .wa .wa-track { position: relative; height: 30px; }
+.reveal .wa .wa-bar {
+  position: absolute; left: 0; top: 4px; bottom: 4px;
+  background: var(--wa-bar); border-radius: 0 4px 4px 0;
+}
+.reveal .wa .wa-bar.is-hi { background: var(--wa-gold); }
+.reveal .wa .wa-track:hover .wa-bar { filter: brightness(0.9); }
+.reveal .wa .wa-val { align-self: center; }
+.reveal .wa-source { font-size: 0.5em; opacity: 0.7; margin-top: 0.8em; text-align: left; }
+</style>
+
+<script>
+(function () {
+  // [area, members, primary %, secondary %]
+  var data = [
+    ['General insurance', 1807, 31, 45], ['Life insurance', 1375, 24, 37], ['Data Science & AI', 443, 8, 35],
+    ['Superannuation', 332, 6, 17], ['Investment', 273, 5, 21], ['Banking', 229, 4, 14],
+    ['Health insurance', 187, 3, 15], ['Reinsurance', 171, 3, 18], ['Risk', 139, 2, 21], ['Finance', 101, 2, 16]
+  ];
+  var HIGHLIGHT = 'Data Science & AI';
+  document.querySelectorAll('.wa:not([data-ready])').forEach(function (root) {
+    root.dataset.ready = '1';
+    var rows = root.querySelector('[data-out="rows"]');
+    var max = 50;
+    data.slice().sort(function (a, b) { return b[3] - a[3]; }).forEach(function (d) {
+      var hi = d[0] === HIGHLIGHT ? ' is-hi' : '';
+      var tip = d[0] + ': secondary area for ' + d[3] + '% of actuaries; main area for ' + d[2] + '% (' + d[1].toLocaleString('en-AU') + ' members)';
+      rows.insertAdjacentHTML('beforeend',
+        '<div class="wa-lab' + hi + '">' + d[0].replace('&', '&amp;') + '</div>' +
+        '<div class="wa-track" title="' + tip.replace('&', '&amp;') + '"><div class="wa-bar' + hi + '" style="width:' + (100 * d[3]) / max + '%"></div></div>' +
+        '<div class="wa-val' + hi + '">' + d[3] + '%</div>');
+    });
+  });
+})();
+</script>
+```
+
+::: {.notes}
+About 2 min. The surprise is data science and AI: actuaries are data people. General and life insurance are still the biggest areas. The full member table is in the backup slides.
+:::

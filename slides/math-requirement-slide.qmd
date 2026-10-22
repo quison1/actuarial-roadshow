@@ -1,0 +1,15 @@
+## Maths requirement {.table-slide .req-table}
+
+| Qualification | Maths requirement |
+|:----------------|:------------------------------------------------------------|
+| **GCE A-level** | A\* if only Mathematics is taken; if Further Mathematics is also taken, at least A in Mathematics and B in Further Mathematics |
+| **Singapore A-levels** | A in H2 Mathematics |
+| **HKDSE** | Pass in Extended Mathematics: Calculus and Statistics, *or* Algebra and Calculus |
+| **IB** | Pass in any of: Mathematics: Analysis and Approaches (SL or HL); Mathematics: Applications and Interpretation (HL) |
+| **Malaysia UEC** | Pass in Advanced Mathematics (II) |
+| **Malaysia STPM** | A in Mathematics |
+| **UNSW Foundation Studies** | At least A in Maths for Science |
+| **Monash Foundation Year** | Mathematics Unit 1: Functions and Calculus *and* Unit 2: Integration, Probability and Statistics; *or* Advanced Mathematics Unit 1: Essential Concepts *and* Unit 2: Calculus with Applications |
+| **French Baccalaureate** | At least 16 in Mathematics / Mathematics Extension 1. If Specialist / Advanced Mathematics is taken and counted: at least 14 in Mathematics / Mathematics Extension 1, *and* an average of at least 12 in Specialist / Advanced Mathematics (from the Year 12 statement of results, not the transcript) |
+| **OSSD** (Ontario) | 80 or above in Advanced Functions *and* in Calculus and Vectors |
+| **AP** | Pass in AP Calculus BC |

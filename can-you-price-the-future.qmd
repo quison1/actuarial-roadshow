@@ -1,0 +1,86 @@
+---
+title: "Can You Price the Future?"
+subtitle: "An interactive workshop on risk, data and the actuarial profession"
+author: "Dr William Lim"
+institute: "Research School of Finance, Actuarial Studies and Statistics, CBE"
+date: "2026-10-08"
+date-format: "D MMMM YYYY"
+format:
+  revealjs:
+    theme: [default, custom.scss]
+    embed-resources: true
+    slide-number: c/t
+    progress: false
+    center: false
+    width: 1200
+    height: 700
+    transition: none
+    background-transition: none
+    incremental: false
+    fig-align: center
+    footer: "ANU Actuarial Roadshow 2026"
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+{{< include slides/flow-hook-slide.qmd >}}
+
+<!--
+  Run sheet (45 min). Speaker notes on each new slide give the timing; press S
+  in the browser to open the speaker view.
+
+   0-3   Hook: show of hands on broken phones
+   3-5   Rules; teams write down their premium
+   5-20  Play the game on the scoreboard
+  20-27  What happened: revenue vs expense, again and again, more customers
+  27-29  Bridge: "you just did a pricing actuary's job"
+  29-36  Careers: areas, jobs, fit, other paths, ANU (five slides)
+  36-38  Winner announcement (reads the scoreboard)
+  38-41  Exit quiz
+  41-45  What to do now, questions; backup slides if asked
+-->
+
+
+{{< include slides/round1-rules-slide.qmd >}}
+
+<!-- {{< include slides/round1-scoreboard-slide.qmd >}} -->
+
+{{< include slides/round1-premium-customers-slide.qmd >}}
+
+{{< include slides/round1-distribution-slide.qmd >}}
+
+{{< include slides/round1-more-customers-slide.qmd >}}
+
+{{< include slides/flow-bridge-slide.qmd >}}
+
+{{< include slides/flow-where-stat-slide.qmd >}}
+
+{{< include slides/flow-careers-slide.qmd >}}
+
+{{< include slides/flow-fit-slide.qmd >}}
+
+{{< include slides/flow-pathways-slide.qmd >}}
+
+{{< include slides/flow-why-anu-slide.qmd >}}
+
+<!-- {{< include slides/flow-winner-slide.qmd >}} -->
+
+{{< include slides/flow-quiz-slide.qmd >}}
+
+{{< include slides/flow-next-steps-slide.qmd >}}
+
+## Backup slides {.backup-title}
+
+{{< include slides/math-requirement-slide.qmd >}}
+
+<!-- ## Backup slides {.backup-title}
+
+{{< include slides/where-actuaries-work-slide.qmd >}}
+
+{{< include slides/anu-slides.qmd >}}
+
+{{< include slides/careers-slides.qmd >}}
+
+ -->
