@@ -1,0 +1,33 @@
+## In a student's words
+
+::: {.testimonial}
+::: {.tq}
+[Should you worry about maths?]{.tq-q}
+
+"Not really! … the difficulty is not really the math itself but the ability to figure out how to approach a problem and form the right equations to solve it."
+:::
+::: {.tq}
+[What surprised you about ANU?]{.tq-q}
+
+"The degree covers a mix of disciplines, including finance, data analytics, programming and a little bit of accounting. It's not purely about insurance and probability."
+:::
+::: {.tq}
+[Advice to your 16-year-old self?]{.tq-q}
+
+"It's okay to not know exactly what you want to do in the future … along the way, you'll gain more exposure that'll help you figure out what direction you want to take."
+:::
+:::
+
+[Current ANU Actuarial Studies student, originally from Kuala Lumpur]{.tq-who}
+
+::: {.notes}
+About 1 min. Read one quote aloud (the maths one lands best with this audience), then let them skim the other two.
+
+Full answers, if asked:
+
+**Should you worry about maths?** Not really! I think what's more important than just being good at calculations is the ability to learn new concepts well and apply them. With the exception of maybe two courses, the difficulty is not really the math itself but the ability to figure out how to approach a problem and form the right equations to solve it. There are also a couple finance and modelling courses that require quite a basic level of math as they're more theoretical.
+
+**What aspect of studying at ANU surprised you?** The biggest surprise initially was the environment. ANU is in Canberra which is a very laid-back city and was something I had to adapt to coming from KL. Most stores close at 5pm and it's not as convenient but over time, I've actually come to like the peace. Another surprise was how ANU structured its Actuarial Studies degree. The degree covers a mix of disciplines, including finance, data analytics, programming and a little bit of accounting. It's not purely about insurance and probability, which made it a more versatile degree than I initially expected.
+
+**Advice to your younger self (age 16-17)?** Probably that it's okay to not know exactly what you want to do in the future. I think it's quite normal to still not be sure, even in your final year of university. And along the way, you'll gain more exposure that'll help you figure out what direction you want to take.
+:::

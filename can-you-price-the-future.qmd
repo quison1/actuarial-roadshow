@@ -36,7 +36,7 @@ execute:
    5-20  Play the game on the scoreboard
   20-27  What happened: revenue vs expense, again and again, more customers
   27-29  Bridge: "you just did a pricing actuary's job"
-  29-36  Careers: areas, jobs, fit, other paths, ANU (five slides)
+  29-37  Careers: areas, jobs, fit, other paths, ANU, student quotes (six slides)
   36-38  Winner announcement (reads the scoreboard)
   38-41  Exit quiz
   41-45  What to do now, questions; backup slides if asked
@@ -64,6 +64,8 @@ execute:
 {{< include slides/flow-pathways-slide.qmd >}}
 
 {{< include slides/flow-why-anu-slide.qmd >}}
+
+{{< include slides/flow-testimonial-slide.qmd >}}
 
 <!-- {{< include slides/flow-winner-slide.qmd >}} -->
 
