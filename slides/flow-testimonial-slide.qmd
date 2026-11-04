@@ -1,5 +1,17 @@
 ## In a student's words
 
+<!-- The photo is switched by `show.testimonial-photo` in _quarto.yml. Without
+     it, the quotes take the full width and the credit line sits beneath them. -->
+
+:::: {.columns .tq-layout}
+::: {.content-visible when-meta="show.testimonial-photo"}
+::: {.column .tq-photo-col}
+![](images/student-testimonial.jpg){.photo .tq-photo fig-alt="Photo of the ANU Actuarial Studies student quoted on this slide, face covered by a placeholder"}
+
+[Current ANU Actuarial Studies student, originally from Kuala Lumpur]{.tq-who}
+:::
+:::
+::: {.column .tq-quotes-col}
 ::: {.testimonial}
 ::: {.tq}
 [Should you worry about maths?]{.tq-q}
@@ -18,7 +30,11 @@
 :::
 :::
 
-[Current ANU Actuarial Studies student, originally from Kuala Lumpur]{.tq-who}
+::: {.content-hidden when-meta="show.testimonial-photo"}
+[Current ANU Actuarial Studies student, originally from Kuala Lumpur]{.tq-who .tq-who-below}
+:::
+:::
+::::
 
 ::: {.notes}
 About 1 min. Read one quote aloud (the maths one lands best with this audience), then let them skim the other two.

@@ -1,0 +1,5 @@
+# Longer session: live scoreboard and winner, plus every backup slide.
+show:
+  scoreboard: true
+  winner: true
+  backup-extra: true

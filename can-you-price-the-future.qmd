@@ -28,6 +28,9 @@ execute:
 {{< include slides/flow-hook-slide.qmd >}}
 
 <!--
+  Optional slides and slide parts are switched on and off in _quarto.yml
+  (`show:`), or per session with a profile: see the notes there.
+
   Run sheet (45 min). Speaker notes on each new slide give the timing; press S
   in the browser to open the speaker view.
 
@@ -45,7 +48,9 @@ execute:
 
 {{< include slides/round1-rules-slide.qmd >}}
 
-<!-- {{< include slides/round1-scoreboard-slide.qmd >}} -->
+::: {.content-visible when-meta="show.scoreboard"}
+{{< include slides/round1-scoreboard-slide.qmd >}}
+:::
 
 {{< include slides/round1-premium-customers-slide.qmd >}}
 
@@ -65,24 +70,28 @@ execute:
 
 {{< include slides/flow-why-anu-slide.qmd >}}
 
+::: {.content-visible when-meta="show.testimonial"}
 {{< include slides/flow-testimonial-slide.qmd >}}
+:::
 
-<!-- {{< include slides/flow-winner-slide.qmd >}} -->
+::: {.content-visible when-meta="show.winner"}
+{{< include slides/flow-winner-slide.qmd >}}
+:::
 
 {{< include slides/flow-quiz-slide.qmd >}}
 
 {{< include slides/flow-next-steps-slide.qmd >}}
 
+::: {.content-visible when-meta="show.backup"}
 ## Backup slides {.backup-title}
 
 {{< include slides/math-requirement-slide.qmd >}}
+:::
 
-<!-- ## Backup slides {.backup-title}
-
+::: {.content-visible when-meta="show.backup-extra"}
 {{< include slides/where-actuaries-work-slide.qmd >}}
 
 {{< include slides/anu-slides.qmd >}}
 
 {{< include slides/careers-slides.qmd >}}
-
- -->
+:::
