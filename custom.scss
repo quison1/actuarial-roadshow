@@ -553,3 +553,8 @@ $die-small: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' vi
   text-align: right;
   opacity: 0.75;
 }
+
+// Smaller QR beside the rules (links to dice.html)
+.reveal img.qr.qr-small {
+  width: 250px;
+}
