@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- On-screen die for "Insure the Class". Published alongside the deck as dice.html. -->
+<title>Insure the Class Dice</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;600;800&display=swap">
+<style>
+/* Layout: one screen for a projector. Die and verdict on the left, tally on the right; stacks on a phone. */
+:root {
+  --bg: #ffffff;
+  --surface: #f5edde;      /* ANU cream */
+  --fg: #1c1c1c;
+  --muted: #6b6253;
+  --line: #e4d8c2;
+  --gold: #be830e;         /* ANU gold */
+  --gold-soft: #dfc187;
+  --claim: #a8322a;
+  --ok: #1d6b52;
+  --die: #ffffff;
+  --pip: #1c1c1c;
+  --font: "Public Sans", "Source Sans Pro", -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #15120d; --surface: #241e15; --fg: #f1ebe0; --muted: #b0a48f; --line: #3a3124;
+    --gold: #d9a441; --gold-soft: #6e5523; --claim: #e2675b; --ok: #4fb690;
+    --die: #f6f1e7; --pip: #1c1c1c; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #15120d; --surface: #241e15; --fg: #f1ebe0; --muted: #b0a48f; --line: #3a3124;
+  --gold: #d9a441; --gold-soft: #6e5523; --claim: #e2675b; --ok: #4fb690;
+  --die: #f6f1e7; --pip: #1c1c1c; color-scheme: dark;
+}
+
+html, body { height: 100%; }
+body { margin: 0; }
+[hidden] { display: none !important; }
+body {
+  background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 16px;
+  font-variant-numeric: tabular-nums;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0;
+  box-sizing: border-box;
+}
+.app { max-width: 1180px; margin: 0 auto; min-height: 100%; display: flex; flex-direction: column; gap: 20px; padding-block: 20px; box-sizing: border-box; }
+
+header { display: flex; align-items: baseline; justify-content: space-between; gap: 12px 24px; flex-wrap: wrap; border-bottom: 1px solid var(--gold-soft); padding-bottom: 12px; }
+h1 { margin: 0; font-size: clamp(1.4rem, 2.6vw, 2rem); font-weight: 600; letter-spacing: -0.01em; text-wrap: balance; }
+.rule { margin: 0; font-size: clamp(0.95rem, 1.6vw, 1.15rem); color: var(--muted); }
+.rule b { color: var(--claim); font-weight: 600; }
+
+main { flex: 1; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 28px; align-items: start; }
+@media (max-width: 760px) { main { grid-template-columns: minmax(0, 1fr); } }
+
+/* --- the die ---------------------------------------------------------- */
+.stage { display: flex; flex-direction: column; align-items: center; gap: 20px; padding-top: 8px; }
+.die-btn { all: unset; cursor: pointer; border-radius: 18%; }
+.die-btn:focus-visible { outline: 4px solid var(--gold); outline-offset: 8px; }
+.die {
+  width: min(42vh, 300px, 70vw); aspect-ratio: 1; max-width: 100%;
+  background: var(--die); border-radius: 18%; box-sizing: border-box; padding: 14%;
+  display: grid; grid-template: repeat(3, 1fr) / repeat(3, 1fr);
+  box-shadow: 0 2px 0 var(--line), 0 14px 30px rgba(60, 40, 10, 0.18), inset 0 0 0 2px var(--line);
+  transition: box-shadow 0.2s;
+}
+.die.is-claim { box-shadow: 0 0 0 6px var(--claim), 0 14px 30px rgba(120, 20, 10, 0.25); }
+.pip { width: 62%; aspect-ratio: 1; border-radius: 50%; background: var(--pip); place-self: center; visibility: hidden; }
+.pip.on { visibility: visible; }
+.die.face-1 .pip.on { background: var(--claim); width: 78%; }
+.die.rolling { animation: tumble 0.55s cubic-bezier(.3,.7,.4,1); }
+@keyframes tumble {
+  0% { transform: rotate(0) scale(1); }
+  30% { transform: rotate(-160deg) scale(0.86); }
+  65% { transform: rotate(-300deg) scale(1.04); }
+  100% { transform: rotate(-360deg) scale(1); }
+}
+
+.verdict { min-height: 1.2em; font-size: clamp(1.8rem, 4.2vw, 3rem); font-weight: 800; letter-spacing: -0.01em; text-align: center; }
+.verdict.claim { color: var(--claim); }
+.verdict.ok { color: var(--ok); }
+.verdict.idle { color: var(--muted); font-weight: 400; font-size: clamp(1.1rem, 2.2vw, 1.5rem); }
+
+.actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+button.act {
+  font: inherit; font-weight: 600; font-size: 1.15rem; padding: 0.6em 1.5em; border-radius: 12px; cursor: pointer;
+  border: 2px solid var(--gold); background: var(--gold); color: #fff;
+  transition: transform 0.08s, filter 0.15s;
+}
+button.act.secondary { background: transparent; color: var(--fg); }
+button.act:hover { filter: brightness(1.07); }
+button.act:active { transform: scale(0.97); }
+button:focus-visible { outline: 3px solid var(--fg); outline-offset: 3px; }
+.hint { margin: 0; font-size: 0.85rem; color: var(--muted); }
+kbd { font-family: inherit; font-size: 0.8em; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 0 0.35em; }
+
+/* batch of ten */
+.batch { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; min-height: 0; }
+.mini {
+  width: 40px; height: 40px; border-radius: 9px; display: grid; place-items: center;
+  font-weight: 800; font-size: 1.15rem; background: var(--surface); color: var(--fg); border: 2px solid var(--line);
+}
+.mini.c { background: var(--claim); border-color: var(--claim); color: #fff; }
+
+/* --- tally ------------------------------------------------------------ */
+.tally { background: var(--surface); border-top: 4px solid var(--gold); padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.tally h2 { margin: 0; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 18px; }
+.stat .num { font-size: clamp(1.6rem, 3vw, 2.3rem); font-weight: 800; line-height: 1.05; }
+.stat .lab { font-size: 0.85rem; color: var(--muted); margin-top: 2px; }
+.stat.claim .num { color: var(--claim); }
+.stat.ok .num { color: var(--ok); }
+
+.rate { display: grid; gap: 6px; }
+.rate-row { display: grid; grid-template-columns: 8.5em minmax(0, 1fr) 3.6em; align-items: center; gap: 10px; font-size: 0.85rem; }
+.track { position: relative; height: 14px; border-radius: 7px; background: var(--bg); overflow: hidden; }
+.fill { position: absolute; inset: 0 auto 0 0; width: 0; border-radius: 7px; background: var(--claim); transition: width 0.3s ease; }
+.fill.expect { background: var(--gold); }
+.rate-row span:last-child { text-align: right; font-weight: 600; }
+
+.hist-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.history { display: flex; flex-wrap: wrap; gap: 4px; max-height: 150px; overflow-y: auto; }
+.history span {
+  width: 24px; height: 24px; border-radius: 5px; display: grid; place-items: center;
+  font-size: 0.8rem; font-weight: 600; background: var(--bg); color: var(--muted);
+}
+.history span.c { background: var(--claim); color: #fff; }
+.empty { margin: 0; font-size: 0.85rem; color: var(--muted); }
+
+.tools { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
+.small { font: inherit; font-size: 0.85rem; padding: 0.35em 0.9em; border-radius: 8px; border: 1.5px solid var(--line); background: var(--bg); color: var(--fg); cursor: pointer; }
+.small:disabled { opacity: 0.4; cursor: default; }
+.small.warn { border-color: var(--claim); color: var(--claim); }
+
+footer { font-size: 0.78rem; color: var(--muted); }
+
+@media (prefers-reduced-motion: reduce) {
+  .die.rolling { animation: none; }
+  .fill, button.act { transition: none; }
+}
+</style>
+
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>Insure the Class</h1>
+    <p class="rule">Roll once per customer. <b>A 1 is a claim</b> costing $600.</p>
+  </header>
+
+  <main>
+    <section class="stage" aria-label="Die">
+      <button class="die-btn" id="dieBtn" aria-label="Roll the die">
+        <div class="die" id="die" aria-hidden="true"></div>
+      </button>
+      <div class="verdict idle" id="verdict" aria-live="polite">Tap the die or press Roll</div>
+      <div class="actions">
+        <button class="act" id="roll1">Roll</button>
+        <button class="act secondary" id="roll10">Roll 10 customers</button>
+      </div>
+      <div class="batch" id="batch" aria-live="polite"></div>
+      <p class="hint"><kbd>Space</kbd> rolls one &middot; <kbd>T</kbd> rolls ten &middot; <kbd>F</kbd> full screen</p>
+    </section>
+
+    <aside class="tally" aria-label="Tally">
+      <h2>Tally so far</h2>
+      <div class="stats">
+        <div class="stat"><div class="num" id="sRolls">0</div><div class="lab">customers rolled</div></div>
+        <div class="stat claim"><div class="num" id="sClaims">0</div><div class="lab">claims (rolled a 1)</div></div>
+        <div class="stat ok"><div class="num" id="sOk">0</div><div class="lab">no claim</div></div>
+        <div class="stat claim"><div class="num" id="sCost">$0</div><div class="lab">claim cost</div></div>
+      </div>
+
+      <div class="rate">
+        <div class="rate-row"><span>Claim rate</span><div class="track"><div class="fill" id="rateFill"></div></div><span id="rateVal">–</span></div>
+        <div class="rate-row"><span>Expected (1/6)</span><div class="track"><div class="fill expect" style="width:16.67%"></div></div><span>16.7%</span></div>
+        <div class="rate-row"><span>Cost / customer</span><div class="track"><div class="fill" id="perFill"></div></div><span id="perVal">–</span></div>
+        <div class="rate-row"><span>Expected</span><div class="track"><div class="fill expect" style="width:16.67%"></div></div><span>$100</span></div>
+      </div>
+
+      <div>
+        <div class="hist-head"><h2>Every roll</h2></div>
+        <div class="history" id="history"><p class="empty">No rolls yet. Each roll appears here; red squares are claims.</p></div>
+      </div>
+
+      <div class="tools">
+        <button class="small" id="undo" disabled>Undo last</button>
+        <button class="small" id="reset" disabled>Reset tally</button>
+      </div>
+    </aside>
+  </main>
+
+  <footer>Rolls use your browser's cryptographic random number generator, so every face has exactly a 1 in 6 chance. ANU Actuarial Roadshow 2026.</footer>
+</div>
+
+<script>
+(function () {
+  var COST = 600;
+  // Which of the 9 grid cells show a pip for each face
+  var FACES = { 1: [4], 2: [2, 6], 3: [2, 4, 6], 4: [0, 2, 6, 8], 5: [0, 2, 4, 6, 8], 6: [0, 2, 3, 5, 6, 8] };
+  var money = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', maximumFractionDigits: 0 });
+
+  var $ = function (id) { return document.getElementById(id); };
+  var die = $('die');
+  for (var i = 0; i < 9; i++) { var p = document.createElement('span'); p.className = 'pip'; die.appendChild(p); }
+  var pips = die.children;
+
+  // Fair 1-6 using rejection sampling (no modulo bias)
+  function d6() {
+    var buf = new Uint8Array(1);
+    try {
+      do { crypto.getRandomValues(buf); } while (buf[0] >= 252);
+      return (buf[0] % 6) + 1;
+    } catch (e) { return Math.floor(Math.random() * 6) + 1; }
+  }
+
+  var hist = [];
+  var groups = []; // sizes of each roll action, for undo
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function showFace(n) {
+    var on = FACES[n];
+    for (var i = 0; i < 9; i++) pips[i].classList.toggle('on', on.indexOf(i) >= 0);
+    die.className = 'die face-' + n + (n === 1 ? ' is-claim' : '');
+  }
+
+  function setVerdict(text, cls) { var v = $('verdict'); v.textContent = text; v.className = 'verdict ' + cls; }
+
+  function render() {
+    var n = hist.length, k = 0;
+    for (var i = 0; i < n; i++) if (hist[i] === 1) k++;
+    $('sRolls').textContent = n;
+    $('sClaims').textContent = k;
+    $('sOk').textContent = n - k;
+    $('sCost').textContent = money.format(k * COST);
+    var rate = n ? k / n : 0;
+    $('rateFill').style.width = (rate * 100) + '%';
+    $('rateVal').textContent = n ? (rate * 100).toFixed(1) + '%' : '–';
+    $('perFill').style.width = (rate * 100) + '%'; // $600 is full width, so $100 sits at 1/6
+    $('perVal').textContent = n ? money.format(Math.round(rate * COST)) : '–';
+
+    var h = $('history');
+    if (!n) {
+      h.innerHTML = '<p class="empty">No rolls yet. Each roll appears here; red squares are claims.</p>';
+    } else {
+      h.innerHTML = '';
+      var frag = document.createDocumentFragment();
+      hist.forEach(function (r, idx) {
+        var s = document.createElement('span');
+        s.textContent = r;
+        s.title = 'Customer ' + (idx + 1) + ': rolled ' + r;
+        if (r === 1) s.className = 'c';
+        frag.appendChild(s);
+      });
+      h.appendChild(frag);
+      h.scrollTop = h.scrollHeight;
+    }
+    $('undo').disabled = !groups.length;
+    $('reset').disabled = !n;
+    disarmReset();
+  }
+
+  var busy = false;
+  function rollOne() {
+    if (busy) return;
+    var r = d6();
+    $('batch').innerHTML = '';
+    hist.push(r); groups.push(1);
+    if (reduce) { finish(r); return; }
+    busy = true;
+    die.classList.remove('rolling'); void die.offsetWidth; die.classList.add('rolling');
+    setVerdict('Rolling…', 'idle');
+    var t = 0, spin = setInterval(function () { showFace(((t++ + r) % 6) + 1); }, 70);
+    setTimeout(function () { clearInterval(spin); busy = false; finish(r); }, 520);
+  }
+  function finish(r) {
+    showFace(r);
+    die.classList.add('face-' + r);
+    if (r === 1) setVerdict('Rolled 1: Claim! −$600', 'claim'); else setVerdict('Rolled ' + r + ': No claim', 'ok');
+    render();
+  }
+
+  function rollTen() {
+    if (busy) return;
+    var rs = [], k = 0;
+    for (var i = 0; i < 10; i++) { var r = d6(); rs.push(r); if (r === 1) k++; }
+    hist.push.apply(hist, rs); groups.push(10);
+    var b = $('batch'); b.innerHTML = '';
+    rs.forEach(function (r) { var m = document.createElement('span'); m.className = 'mini' + (r === 1 ? ' c' : ''); m.textContent = r; b.appendChild(m); });
+    showFace(rs[rs.length - 1]);
+    setVerdict(k === 0 ? '10 customers: no claims' : '10 customers: ' + k + (k === 1 ? ' claim' : ' claims') + ', −' + money.format(k * COST), k ? 'claim' : 'ok');
+    render();
+  }
+
+  $('roll1').addEventListener('click', rollOne);
+  $('dieBtn').addEventListener('click', rollOne);
+  $('roll10').addEventListener('click', rollTen);
+
+  $('undo').addEventListener('click', function () {
+    if (!groups.length) return;
+    hist.splice(hist.length - groups.pop());
+    $('batch').innerHTML = '';
+    setVerdict('Last roll undone', 'idle');
+    if (hist.length) showFace(hist[hist.length - 1]); else showFace(6);
+    render();
+  });
+
+  // Two-step reset, since confirm() is unavailable
+  var armed = false, armTimer;
+  function disarmReset() { armed = false; clearTimeout(armTimer); var b = $('reset'); b.textContent = 'Reset tally'; b.classList.remove('warn'); }
+  $('reset').addEventListener('click', function () {
+    if (!armed) {
+      armed = true; var b = this; b.textContent = 'Click again to clear'; b.classList.add('warn');
+      armTimer = setTimeout(disarmReset, 3000); return;
+    }
+    hist = []; groups = []; $('batch').innerHTML = '';
+    showFace(6); setVerdict('Tally cleared. Ready for the next round', 'idle');
+    render();
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.target.closest && e.target.closest('input, textarea')) return;
+    if (e.repeat || e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.code === 'Space') {
+      // Space always rolls one die, even when another button has focus
+      e.preventDefault(); rollOne();
+    } else if (e.key === 't' || e.key === 'T') { rollTen(); }
+    else if (e.key === 'f' || e.key === 'F') {
+      try {
+        if (document.fullscreenElement) document.exitFullscreen();
+        else { var pr = document.documentElement.requestFullscreen(); if (pr && pr.catch) pr.catch(function () {}); }
+      } catch (err) {}
+    }
+  });
+
+  function start(data) {
+    if (data && Array.isArray(data.hist)) { hist = data.hist.slice(); groups = (data.groups || []).slice(); }
+    showFace(hist.length ? hist[hist.length - 1] : 6);
+    if (hist.length) setVerdict('Tally restored', 'idle');
+    render();
+  }
+  var hot = window.claude && window.claude.hot;
+  if (hot && hot.snapshot) { try { hot.snapshot(function () { return { hist: hist, groups: groups }; }); } catch (e) {} }
+  if (hot && hot.ready) hot.ready(start); else start((hot && hot.data) || {});
+})();
+</script>
+
+</body>
+</html>

@@ -1,5 +1,6 @@
 # Rendered decks: rebuild with `quarto render <deck>.qmd`
 *.html
+!dice.html
 *_files/
 .quarto/
 
