@@ -6,7 +6,7 @@ on:
   workflow_dispatch:        # also allows a manual "Run workflow" button
     inputs:
       profile:
-        description: "Deck profile(s), e.g. no-photo or no-photo,no-phones (blank = defaults in _quarto.yml)"
+        description: "Deck profile(s), e.g. with-photo or with-photo,no-phones (blank = defaults in _quarto.yml)"
         required: false
         default: ""
       publish:

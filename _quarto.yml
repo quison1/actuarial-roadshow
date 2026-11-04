@@ -7,7 +7,7 @@
 #
 #   quarto render can-you-price-the-future.qmd                       # defaults
 #   quarto render can-you-price-the-future.qmd --profile no-phones   # one profile
-#   quarto render can-you-price-the-future.qmd --profile no-photo,no-phones
+#   quarto render can-you-price-the-future.qmd --profile with-photo,no-phones
 #
 # Profiles live in _quarto-<name>.yml next to this file. To add one, copy an
 # existing profile, rename it, and list only the switches it changes.
@@ -25,6 +25,6 @@ show:
   winner: false              # winner announcement (reads the scoreboard, so needs it on)
   dice-qr: true              # QR code to the on-screen dice page, on the rules slide
   testimonial: true          # "In a student's words" slide
-  testimonial-photo: true    # student photo on that slide (quotes go full width without it)
+  testimonial-photo: false   # student photo on that slide (off so the public site has no photo; use --profile with-photo)
   backup: true               # "Backup slides" divider and the maths requirement slide
   backup-extra: false        # older backup slides: where actuaries work, ANU, careers

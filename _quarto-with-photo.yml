@@ -1,0 +1,4 @@
+# Show the student photo on the testimonial slide (it is off by default so
+# the public GitHub Pages copy carries no photo). Use for in-person sessions.
+show:
+  testimonial-photo: true
