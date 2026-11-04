@@ -12,7 +12,7 @@ Actuaries study data to measure risk: how many phones break, how many drivers cr
 One person's future is uncertain; 10,000 people's futures are surprisingly predictable. That is how superannuation, life insurance and climate-risk planning work.
 :::
 ::: {.pillar .fragment}
-**You saw the need of room for bad luck**
+**You saw why you need room for bad luck**
 
 Some years bring a run of 1s and more claims than expected. Insurers keep extra money set aside so they can still pay everyone. Working out how much is called reserving and risk management.
 :::
