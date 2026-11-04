@@ -549,6 +549,17 @@ $die-small: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' vi
 // lets the quotes take the full slide width.
 .reveal .tq-layout .tq-photo-col { flex: 0 0 27%; }
 .reveal .tq-layout .tq-quotes-col { flex: 1 1 0; min-width: 0; }
+// Photo off: the quotes column is alone, so set the three quotes side by side
+.reveal .tq-layout > .tq-quotes-col:only-child .testimonial {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 28px;
+  margin-top: 0.4em;
+}
+.reveal .tq-layout > .tq-quotes-col:only-child .testimonial .tq {
+  padding: 0.9em 1em 1.1em;
+  font-size: 0.84em;
+  line-height: 1.45;
+}
 .reveal .tq-who.tq-who-below { text-align: right; margin-top: 0.8em; }
 .reveal .tq-layout > .column > p { margin: 0; }
 .reveal img.photo.tq-photo {
