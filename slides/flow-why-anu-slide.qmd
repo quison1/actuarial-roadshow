@@ -18,7 +18,7 @@ Most of our actuarial staff worked commercially before joining ANU.
 ::: {.card .fragment}
 **Research-led teaching**
 
-Each course is taught by experts in their fields, with research informing the curriculum.
+Each course is taught by experts in their fields (economics by economists, accounting by accountants, etc), with research informing the curriculum.
 :::
 :::
 
