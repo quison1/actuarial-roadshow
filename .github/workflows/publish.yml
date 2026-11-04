@@ -6,17 +6,24 @@ on:
   workflow_dispatch:        # also allows a manual "Run workflow" button
     inputs:
       profile:
-        description: "Deck profile(s) to publish, e.g. no-photo or no-photo,no-phones (blank = defaults in _quarto.yml)"
+        description: "Deck profile(s), e.g. no-photo or no-photo,no-phones (blank = defaults in _quarto.yml)"
         required: false
         default: ""
+      publish:
+        description: "Publish to the live site (untick to only build a file to download)"
+        type: boolean
+        required: false
+        default: true
 
 permissions:
   contents: read
   pages: write
   id-token: write
 
+# Runs that publish queue behind each other; a render-only run gets its own
+# group so it never cancels, or waits for, a publish.
 concurrency:
-  group: pages
+  group: ${{ (github.event_name == 'push' || inputs.publish) && 'pages' || format('render-{0}', github.run_id) }}
   cancel-in-progress: true
 
 jobs:
@@ -39,12 +46,35 @@ jobs:
           mkdir _site
           cp can-you-price-the-future.html _site/index.html
           cp dice.html _site/dice.html
-      - uses: actions/upload-pages-artifact@v3
+
+      # Publishing: hand the site to GitHub Pages
+      - if: github.event_name == 'push' || inputs.publish
+        uses: actions/upload-pages-artifact@v3
         with:
           path: _site
 
+      # Render only: attach the deck to the run as a download.
+      # The deck is a single self-contained file (embed-resources), so it
+      # opens offline in any browser.
+      - if: github.event_name != 'push' && !inputs.publish
+        name: Name the download
+        id: name
+        env:
+          PROFILE: ${{ inputs.profile }}
+        run: |
+          label="${PROFILE:-default}"
+          echo "label=${label//,/-}" >> "$GITHUB_OUTPUT"
+          mv _site/index.html "_site/can-you-price-the-future-${label//,/-}.html"
+      - if: github.event_name != 'push' && !inputs.publish
+        uses: actions/upload-artifact@v4
+        with:
+          name: deck-${{ steps.name.outputs.label }}
+          path: _site
+          retention-days: 30
+
   deploy:
     needs: build
+    if: github.event_name == 'push' || inputs.publish
     runs-on: ubuntu-latest
     environment:
       name: github-pages
