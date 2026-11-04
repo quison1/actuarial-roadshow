@@ -1,12 +1,17 @@
 ## In a student's words
 
+<!-- The photo is switched by `show.testimonial-photo` in _quarto.yml. Without
+     it, the quotes take the full width and the credit line sits beneath them. -->
+
 :::: {.columns .tq-layout}
-::: {.column width="27%"}
+::: {.content-visible when-meta="show.testimonial-photo"}
+::: {.column .tq-photo-col}
 ![](images/student-testimonial.jpg){.photo .tq-photo fig-alt="Photo of the ANU Actuarial Studies student quoted on this slide, face covered by a placeholder"}
 
 [Current ANU Actuarial Studies student, originally from Kuala Lumpur]{.tq-who}
 :::
-::: {.column width="73%"}
+:::
+::: {.column .tq-quotes-col}
 ::: {.testimonial}
 ::: {.tq}
 [Should you worry about maths?]{.tq-q}
@@ -23,6 +28,10 @@
 
 "It's okay to not know exactly what you want to do in the future … along the way, you'll gain more exposure that'll help you figure out what direction you want to take."
 :::
+:::
+
+::: {.content-hidden when-meta="show.testimonial-photo"}
+[Current ANU Actuarial Studies student, originally from Kuala Lumpur]{.tq-who .tq-who-below}
 :::
 :::
 ::::

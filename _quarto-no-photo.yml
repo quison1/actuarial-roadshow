@@ -1,0 +1,3 @@
+# Keep the student photo out, e.g. for a copy that is posted or emailed.
+show:
+  testimonial-photo: false

@@ -1,0 +1,5 @@
+# Tight time slot: drop the testimonial and the backup slides.
+show:
+  testimonial: false
+  backup: false
+  backup-extra: false

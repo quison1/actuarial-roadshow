@@ -1,0 +1,3 @@
+# Schools where phones are put away: physical dice only, no QR code.
+show:
+  dice-qr: false

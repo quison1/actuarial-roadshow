@@ -4,6 +4,11 @@ on:
   push:
     branches: [main]
   workflow_dispatch:        # also allows a manual "Run workflow" button
+    inputs:
+      profile:
+        description: "Deck profile(s) to publish, e.g. no-photo or no-photo,no-phones (blank = defaults in _quarto.yml)"
+        required: false
+        default: ""
 
 permissions:
   contents: read
@@ -23,8 +28,14 @@ jobs:
         with:
           version: 1.9.37   # same as your local Quarto
       - name: Render the deck
+        env:
+          PROFILE: ${{ inputs.profile }}
         run: |
-          quarto render can-you-price-the-future.qmd
+          if [ -n "$PROFILE" ]; then
+            quarto render can-you-price-the-future.qmd --profile "$PROFILE"
+          else
+            quarto render can-you-price-the-future.qmd
+          fi
           mkdir _site
           cp can-you-price-the-future.html _site/index.html
           cp dice.html _site/dice.html

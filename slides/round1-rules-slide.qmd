@@ -1,7 +1,9 @@
 ## Insure the Class
 
-:::: {.columns}
-::: {.column width="70%"}
+<!-- The QR code is switched by `show.dice-qr` in _quarto.yml. -->
+
+:::: {.columns .rules-layout}
+::: {.column .rules-text}
 You run a phone insurance company. A claim costs **$600**.
 
 ::: {.incremental}
@@ -10,9 +12,11 @@ You run a phone insurance company. A claim costs **$600**.
 - Roll for each customer, then tally your profit and loss.
 :::
 :::
-::: {.column width="30%"}
+::: {.content-visible when-meta="show.dice-qr"}
+::: {.column .rules-qr}
 ![](images/qr-dice.png){.qr .qr-small fig-alt="QR code linking to the on-screen dice page"}
 [No die? Scan to roll on your phone]{.caption-line}
+:::
 :::
 ::::
 
