@@ -577,3 +577,14 @@ $die-small: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' vi
 .reveal img.qr.qr-small {
   width: 250px;
 }
+
+// Job cards on "Where this can take you": a bold title and a plain line
+.reveal .cards.cards-jobs { margin-top: 0.8em; }
+.reveal .cards.cards-jobs .card {
+  min-height: 0;
+  font-size: 0.68em;
+  font-weight: 400;
+  line-height: 1.4;
+}
+.reveal .cards.cards-jobs .card p + p { margin-top: 0.4em; }
+.reveal .cards.cards-jobs .card strong { display: block; font-size: 1.3em; line-height: 1.2; }

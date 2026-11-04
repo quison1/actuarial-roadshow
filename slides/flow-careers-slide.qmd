@@ -1,40 +1,34 @@
 ## Where this can take you
 
-::: {.career-map}
-::: {.cm-game}
-Estimating the chance of a claim
-:::
-::: {.cm-job}
-**Data analyst / data scientist**
+<!-- The game-to-job links are in the speaker notes, not on the slide, so this
+     slide doesn't repeat "You just did a pricing actuary's job". -->
+
+::: {.cards .cards-jobs}
+::: {.card .fragment}
+**Data scientist**
 
 Builds models from claims, health and customer data to predict what happens next.
 :::
-
-::: {.cm-game}
-Setting the premium
-:::
-::: {.cm-job}
+::: {.card .fragment}
 **Pricing actuary**
 
 Sets the price of car, home, travel, health and life insurance.
 :::
-
-::: {.cm-game}
-Surviving a run of bad luck
-:::
-::: {.cm-job}
+::: {.card .fragment}
 **Risk and capital actuary**
 
-Makes sure insurers, banks and super funds can still pay out in a bad year, including for regulators and government.
+Checks that insurers, banks and super funds are strong enough to survive a crisis, and reports to regulators and government.
 :::
 :::
 
-::: {.cm-more}
+::: {.cm-more .fragment}
 [And less obvious paths:]{.cm-lead} [Superannuation]{.chip} [Consulting]{.chip} [Health]{.chip} [Climate risk]{.chip} [Banking]{.chip} [Sports analytics]{.chip} [Tech]{.chip}
 :::
 
+::: {.fragment}
 [The pathway: an accredited degree, then professional qualification through the Actuaries Institute (AUS), Society of Actuaries (SOA, U.S. and international), and the Institute and Faculty of Actuaries (IFoA, U.K.).]{.source-line}
+:::
 
 ::: {.notes}
-About 2 min. Point back at each part of the game: "When you guessed how many phones would break, that's data science. When you set the premium, that's pricing. When you hoped for no bad luck, that's risk and capital."
+About 2 min. Reveal one job at a time and link it back to the game: "When you guessed how many phones would break, that's data science. When you set the premium, that's pricing. When you worried about a run of 1s, that's risk and capital." Then the other paths, then the qualification route.
 :::

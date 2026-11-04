@@ -7,17 +7,17 @@
 Actuaries study data to measure risk: how many phones break, how many drivers crash, how long people live.
 :::
 ::: {.pillar .fragment}
-**You set a price that covers claims, with room for bad luck**
-
-That is pricing: P-plate car insurance, health insurance, travel insurance.
-:::
-::: {.pillar .fragment}
 **You saw why more customers make results predictable**
 
 One person's future is uncertain; 10,000 people's futures are surprisingly predictable. That is how superannuation, life insurance and climate-risk planning work.
 :::
+::: {.pillar .fragment}
+**You saw why you need room for bad luck**
+
+Some years bring a run of 1s and more claims than expected. Insurers keep extra money set aside so they can still pay everyone. Working out how much is called reserving and risk management.
+:::
 :::
 
 ::: {.notes}
-About 2 min. This is the turn from the game to careers. Point back at the scoreboard: the cheap team won customers but took on the risk.
+About 2 min. This is the turn from the game to careers. Point back at the scoreboard: the cheap team won customers but took on the risk, and had nothing left over for a bad run.
 :::
