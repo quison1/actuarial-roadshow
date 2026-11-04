@@ -1,5 +1,12 @@
 ## In a student's words
 
+:::: {.columns .tq-layout}
+::: {.column width="27%"}
+![](images/student-testimonial.jpg){.photo .tq-photo fig-alt="Photo of the ANU Actuarial Studies student quoted on this slide, face covered by a placeholder"}
+
+[Current ANU Actuarial Studies student, originally from Kuala Lumpur]{.tq-who}
+:::
+::: {.column width="73%"}
 ::: {.testimonial}
 ::: {.tq}
 [Should you worry about maths?]{.tq-q}
@@ -17,8 +24,8 @@
 "It's okay to not know exactly what you want to do in the future … along the way, you'll gain more exposure that'll help you figure out what direction you want to take."
 :::
 :::
-
-[Current ANU Actuarial Studies student, originally from Kuala Lumpur]{.tq-who}
+:::
+::::
 
 ::: {.notes}
 About 1 min. Read one quote aloud (the maths one lands best with this audience), then let them skim the other two.
