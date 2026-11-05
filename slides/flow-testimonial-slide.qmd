@@ -6,7 +6,7 @@
 :::: {.columns .tq-layout}
 ::: {.content-visible when-meta="show.testimonial-photo"}
 ::: {.column .tq-photo-col}
-![](images/student-testimonial.jpg){.photo .tq-photo fig-alt="Photo of the ANU Actuarial Studies student quoted on this slide, face covered by a placeholder"}
+![](images/student-testimonial.png){.photo .tq-photo fig-alt="Photo of the ANU Actuarial Studies student quoted on this slide"}
 
 [Mireille Kho, current ANU Actuarial Studies student, from Kuala Lumpur]{.tq-who}
 :::
