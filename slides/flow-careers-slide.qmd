@@ -22,7 +22,7 @@ Checks that insurers, banks and super funds are strong enough to survive a crisi
 :::
 
 ::: {.cm-more .fragment}
-[And less obvious paths:]{.cm-lead} [Superannuation]{.chip} [Consulting]{.chip} [Health]{.chip} [Climate risk]{.chip} [Banking]{.chip} [Sports analytics]{.chip} [Tech]{.chip}
+[And more career paths:]{.cm-lead} [Superannuation]{.chip} [Consulting]{.chip} [Health]{.chip} [Climate risk]{.chip} [Banking]{.chip} [Sports analytics]{.chip} [Tech]{.chip}
 :::
 
 ::: {.fragment}
