@@ -13,17 +13,17 @@
 :::
 ::: {.column .tq-quotes-col}
 ::: {.testimonial}
-::: {.tq}
+::: {.tq .fragment}
 [Should you worry about maths?]{.tq-q}
 
 "Not really! … the difficulty is not really the math itself but the ability to figure out how to approach a problem and form the right equations to solve it."
 :::
-::: {.tq}
+::: {.tq .fragment}
 [What surprised you about ANU?]{.tq-q}
 
 "The degree covers a mix of disciplines, including finance, data analytics, programming and a little bit of accounting. It's not purely about insurance and probability."
 :::
-::: {.tq}
+::: {.tq .fragment}
 [Advice to your 16-year-old self?]{.tq-q}
 
 "It's okay to not know exactly what you want to do in the future … along the way, you'll gain more exposure that'll help you figure out what direction you want to take."
@@ -37,7 +37,7 @@
 ::::
 
 ::: {.notes}
-About 1 min. Read one quote aloud (the maths one lands best with this audience), then let them skim the other two.
+About 1 min. Click to reveal one quote at a time. Read the maths one aloud (it lands best with this audience), then let them skim the other two as they appear.
 
 Full answers, if asked:
 

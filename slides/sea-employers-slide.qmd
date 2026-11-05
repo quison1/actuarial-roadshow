@@ -1,0 +1,44 @@
+## Where actuaries work in Southeast Asia
+
+<!-- Switched by `show.backup-sea` in _quarto.yml. Names are examples of
+     well-known employers, not a complete list; check before each session,
+     as insurers in the region merge and rebrand often. -->
+
+::: {.cards .cards-employers}
+::: {.card}
+**Singapore**
+
+[Regional hub for Asia-Pacific teams]{.ce-sub}
+
+- Great Eastern, Prudential, AIA, Income Insurance
+- Swiss Re, Munich Re, SCOR, RGA
+- Milliman, WTW, Mercer, Big Four
+- Monetary Authority of Singapore
+:::
+::: {.card}
+**Malaysia**
+
+[Kuala Lumpur, with a large takaful (Islamic insurance) sector]{.ce-sub}
+
+- Great Eastern, Prudential, AIA, Allianz, Etiqa
+- Takaful Malaysia, Prudential BSN Takaful
+- Malaysian Re, Milliman, Big Four
+- Bank Negara Malaysia, EPF (KWSP)
+:::
+::: {.card}
+**Vietnam**
+
+[A fast-growing life insurance market]{.ce-sub}
+
+- Prudential, Manulife, AIA, Dai-ichi Life
+- Bao Viet, FWD, Generali, Sun Life
+- Vinare (national reinsurer)
+- Big Four, Ministry of Finance
+:::
+:::
+
+[Examples only. Global groups (Prudential, AIA, Manulife, Great Eastern and the big reinsurers) hire actuaries across all three countries.]{.source-line}
+
+::: {.notes}
+Backup slide for students from, or planning to work in, Southeast Asia. "Big Four" is Deloitte, PwC, EY and KPMG. An ANU actuarial degree is recognised by the professional bodies these employers look for (Actuaries Institute, SOA, IFoA).
+:::

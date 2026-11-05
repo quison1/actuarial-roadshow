@@ -88,6 +88,10 @@ execute:
 {{< include slides/math-requirement-slide.qmd >}}
 :::
 
+::: {.content-visible when-meta="show.backup-sea"}
+{{< include slides/sea-employers-slide.qmd >}}
+:::
+
 ::: {.content-visible when-meta="show.backup-extra"}
 {{< include slides/where-actuaries-work-slide.qmd >}}
 
