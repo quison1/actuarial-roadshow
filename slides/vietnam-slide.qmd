@@ -10,26 +10,26 @@
 ::: {.card .fragment}
 **Young and growing fast**
 
-Life insurance in Vietnam is only about 20 years old. At first, foreign experts held every key actuarial job. Now Vietnamese actuaries are CEOs and CFOs of major insurers.
+Life insurance in Vietnam is only about 20 years old with about 12% of population has life insurance, compared to 50-80% in Singapore, Malaysia and Thailand.
 :::
 ::: {.card .fragment}
 **Required by law**
 
-Since 2016, every insurer in Vietnam must have a qualified actuary. They approve new products and prices, check that enough money is set aside for claims, and test the company's financial strength every month.
+Like in many countries, every insurer in Vietnam must have a qualified actuary to set prices, evaluate reserve and ensure solvency.
 :::
 ::: {.card .fragment}
-**More students than ever**
+**Need more students than ever**
 
-Vietnamese candidates sitting Society of Actuaries (SOA) exams rose almost 70% in five years. The first actuarial degrees opened in Hanoi (2018) and Ho Chi Minh City (2019).
+Emerging market with lots of room for growth, maturing actuarial communities.
 :::
 :::
 
 ::: {.keyphrase .fragment .vn-close}
-Vietnam's top actuarial roles need an international fellowship, such as the SOA's. ANU is an SOA Centre of Actuarial Excellence.
+Vietnam's top actuarial roles need an international fellowship, such as the SOA's. ANU is an SOA Centre of Actuarial Excellence, students can get SOA accreditation while studying.
 :::
 
 [Source: H. S. Odierno, S. H. Kau and N. Nguyen, "The Growing Strength of Actuaries in Vietnam", *The Actuary* (Society of Actuaries), January 2021.]{.source-line}
 
 ::: {.notes}
-About 1 min, for Vietnamese students or schools. Examples for card 1: Vietnamese actuaries have been CEO of Aviva and FWD Vietnam and CFO of AIA, FWD and Dai-ichi Vietnam. Card 3: 220+ candidates sat SOA exams in Vietnam in 2019; the degrees are at the National Economics University (Hanoi) and the University of Economics Ho Chi Minh City (UEH). The 2016 rule is Decree 76: the appointed actuary of a life insurer must be a fellow of an international body such as the SOA, with 10 years in life and health insurance or 5 years after qualifying, and must live in Vietnam. Non-life insurers need at least an associate. The article is from 2021, so the numbers will have grown since; check the current rules before quoting them as up to date.
+About 1 min, for Vietnamese students or schools. source for card 1: https://vir.com.vn/vietnams-life-insurance-sector-eyes-growth-amid-widening-protection-gap-160447.html. Card 3: 220+ candidates sat SOA exams in Vietnam in 2019; the degrees are at the National Economics University (Hanoi) and the University of Economics Ho Chi Minh City (UEH). The 2016 rule is Decree 76: the appointed actuary of a life insurer must be a fellow of an international body such as the SOA, with 10 years in life and health insurance or 5 years after qualifying, and must live in Vietnam. Non-life insurers need at least an associate. The article is from 2021, so the numbers will have grown since; check the current rules before quoting them as up to date.
 :::
