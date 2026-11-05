@@ -612,3 +612,6 @@ $die-small: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' vi
 .reveal .cards.cards-employers .ce-sub { display: block; margin: 0.2em 0 0.6em; opacity: 0.75; font-style: italic; }
 .reveal .cards.cards-employers ul { margin: 0; padding-left: 1.1em; }
 .reveal .cards.cards-employers ul li { margin-bottom: 0.35em; }
+
+// Vietnam slide: closing line clear of the cards
+.reveal .keyphrase.vn-close { margin-top: 0.9em; font-size: 0.95em; }
