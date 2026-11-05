@@ -29,7 +29,7 @@ An emerging market with plenty of room to grow, and an actuarial community that 
 Vietnam's top actuarial roles need an international fellowship, such as the SOA's. ANU is an SOA Centre of Actuarial Excellence, so students can earn credit towards SOA exams while they study.
 :::
 
-[Sources: H. S. Odierno, S. H. Kau and N. Nguyen, "The Growing Strength of Actuaries in Vietnam", *The Actuary* (Society of Actuaries), January 2021; *Vietnam Investment Review* (vir.com.vn).]{.source-line}
+[Sources: card 1, "[Vietnam's life insurance sector eyes growth amid widening protection gap](https://vir.com.vn/vietnams-life-insurance-sector-eyes-growth-amid-widening-protection-gap-160447.html)", *Vietnam Investment Review*; other cards, H. S. Odierno, S. H. Kau and N. Nguyen, "The Growing Strength of Actuaries in Vietnam", *The Actuary* (Society of Actuaries), January 2021.]{.source-line}
 
 ::: {.notes}
 About 1 min, for Vietnamese students or schools. Source for card 1: https://vir.com.vn/vietnams-life-insurance-sector-eyes-growth-amid-widening-protection-gap-160447.html. Card 3: 220+ candidates sat SOA exams in Vietnam in 2019; the degrees are at the National Economics University (Hanoi) and the University of Economics Ho Chi Minh City (UEH). The 2016 rule is Decree 76: the appointed actuary of a life insurer must be a fellow of an international body such as the SOA, with 10 years in life and health insurance or 5 years after qualifying, and must live in Vietnam. Non-life insurers need at least an associate. The article is from 2021, so the numbers will have grown since; check the current rules before quoting them as up to date.
