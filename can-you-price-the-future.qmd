@@ -2,8 +2,7 @@
 title: "Can You Price the Future?"
 subtitle: "An interactive workshop on risk, data and the actuarial profession"
 author: "Dr William Lim"
-institute: "Research School of Finance, Actuarial Studies and Statistics, CBE"
-date: "2026-10-08"
+institute: "Australian National University"
 date-format: "D MMMM YYYY"
 format:
   revealjs:
