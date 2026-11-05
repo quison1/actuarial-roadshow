@@ -38,6 +38,7 @@ Optional slides and slide parts are switched on and off under `show:` in `_quart
 | `dice-qr` | on | QR code to the dice page, on the rules slide |
 | `testimonial` | on | "In a student's words" slide |
 | `testimonial-photo` | off | Student photo on that slide; without it the quotes sit in three columns |
+| `vietnam` | off | "Actuaries in Vietnam" slide for Vietnamese students, after the testimonial |
 | `backup` | on | "Backup slides" divider and the maths requirement slide |
 | `backup-sea` | on | Southeast Asia employers backup slide |
 | `backup-extra` | off | Older backup slides: where actuaries work, ANU (5 slides), careers |
@@ -51,6 +52,7 @@ Each preset is a file named `_quarto-<name>.yml` that changes a few settings. Us
 | *(none)* | Defaults above | 18 |
 | `with-photo` | Photo on | 18 |
 | `no-phones` | Dice QR code off | 18 |
+| `vietnam` | "Actuaries in Vietnam" slide on | 19 |
 | `full` | Scoreboard, winner and older backup slides on | 27 |
 | `short` | Testimonial and all backup slides off | 14 |
 
@@ -63,6 +65,7 @@ Useful combinations:
 | Long workshop | `full,with-photo` |
 | Short slot | `short` |
 | Short slot, no phones | `short,no-phones` |
+| School in Vietnam | `with-photo,vietnam` |
 
 If two presets change the same setting, the one listed last wins.
 

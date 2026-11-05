@@ -74,6 +74,10 @@ execute:
 {{< include slides/flow-testimonial-slide.qmd >}}
 :::
 
+::: {.content-visible when-meta="show.vietnam"}
+{{< include slides/vietnam-slide.qmd >}}
+:::
+
 ::: {.content-visible when-meta="show.winner"}
 {{< include slides/flow-winner-slide.qmd >}}
 :::

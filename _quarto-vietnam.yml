@@ -1,0 +1,4 @@
+# Sessions with Vietnamese students: adds "Actuaries in Vietnam" after the
+# student testimonial.
+show:
+  vietnam: true
