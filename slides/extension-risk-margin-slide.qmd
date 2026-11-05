@@ -1,0 +1,32 @@
+## Advanced: how sure do you want to be? {.table-slide .risk-margin}
+
+::: {.fragment}
+Charge 20 customers the expected cost of **$100** each. If 4 or more phones break, you lose money: that happens about **43% of the time**.
+:::
+
+::: {.fragment}
+A risk manager's answer: charge the **top of the 95% range** from the last slide. Then only the unluckiest few runs (under 4%) lose money.
+
+| Customers | 95% of runs (last slide) | Safe premium | Safety margin on top of $100 |
+|:---------:|:------------------------:|:------------:|:----------------------------:|
+| 20        | $2 to $198               | $198         | +98%                         |
+| 100       | $56 to $144              | $144         | +44%                         |
+| 1,000     | $86 to $114              | $114         | +14%                         |
+:::
+
+::: {.keyphrase .fragment}
+More customers, smaller safety margin. That's why big insurers can charge less and still be safe.
+:::
+
+::: {.notes}
+Optional, for strong maths classes (about 4 min). Skip it for Year 10 groups. Turn on "Show theory" on the previous slide first so the ranges are on screen.
+
+Where the numbers come from (claim $600, chance 1/6), if a student asks:
+
+- The number of claims among n customers is binomial, Bin(n, 1/6). With 20 customers at $100 you collect $2,000, so 4 or more claims ($2,400) is a loss: P(K ≥ 4) ≈ 0.43.
+- The ranges are the same as the previous slide: expected cost ± 1.96 standard deviations, where the standard deviation of the average cost is $600 × √(p(1 − p) ÷ n). For 20 customers that is $100 ± $98.
+- Charging the top of the range covers 6 claims out of 20, 24 out of 100 and 190 out of 1,000. Exact binomial chance of losing money: 3.7%, 2.2% and 2.3%.
+- The margin shrinks like 1 ÷ √n: four times as many customers halves it.
+
+Real-world link: this is risk management. In Australia the regulator (APRA) requires insurers to hold enough capital to survive roughly a 1-in-200-year bad year: the same idea, pushed further out into the unlucky tail.
+:::

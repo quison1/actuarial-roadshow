@@ -1,0 +1,55 @@
+warning: in the working copy of 'can-you-price-the-future.qmd', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'custom.scss', LF will be replaced by CRLF the next time Git touches it
+[1mdiff --git a/can-you-price-the-future.qmd b/can-you-price-the-future.qmd[m
+[1mindex d6b87f7..96fbb21 100644[m
+[1m--- a/can-you-price-the-future.qmd[m
+[1m+++ b/can-you-price-the-future.qmd[m
+[36m@@ -35,6 +35,7 @@[m [mexecute:[m
+    3-5   Rules; teams write down their premium[m
+    5-20  Play the game on the scoreboard[m
+   20-27  What happened: revenue vs expense, again and again, more customers[m
+[32m+[m[32m         (+5 excess twist card; +4 optional "how sure?" slide for strong classes)[m
+   27-29  Bridge: "you just did a pricing actuary's job"[m
+   29-36  Careers: areas, jobs, fit, other paths, ANU (five slides)[m
+   36-38  Winner announcement (reads the scoreboard)[m
+[36m@@ -53,6 +54,11 @@[m [mexecute:[m
+ [m
+ {{< include slides/round1-more-customers-slide.qmd >}}[m
+ [m
+[32m+[m[32m{{< include slides/extension-excess-slide.qmd >}}[m
+[32m+[m
+[32m+[m[32m<!-- Optional, strong maths classes only: skip past it otherwise -->[m
+[32m+[m[32m{{< include slides/extension-risk-margin-slide.qmd >}}[m
+[32m+[m
+ {{< include slides/flow-bridge-slide.qmd >}}[m
+ [m
+ {{< include slides/flow-where-stat-slide.qmd >}}[m
+[1mdiff --git a/custom.scss b/custom.scss[m
+[1mindex 746f897..4493459 100644[m
+[1m--- a/custom.scss[m
+[1m+++ b/custom.scss[m
+[36m@@ -523,3 +523,24 @@[m [m$die-small: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' vi[m
+     $die-big right top / auto 400px no-repeat;[m
+   pointer-events: none;[m
+ }[m
+[32m+[m
+[32m+[m[32m// Optional extension slides after the game: tighter type so four questions[m
+[32m+[m[32m// and their answers, or the text plus a table, fit on one slide[m
+[32m+[m[32m.reveal .excess-slide .keyphrase {[m
+[32m+[m[32m  font-size: 0.9em;[m
+[32m+[m[32m  margin-bottom: 0.7em;[m
+[32m+[m[32m}[m
+[32m+[m[32m.reveal .excess-slide .quiz .q {[m
+[32m+[m[32m  font-size: 0.82em;[m
+[32m+[m[32m  margin-bottom: 0.55em;[m
+[32m+[m[32m}[m
+[32m+[m[32m.reveal .risk-margin p {[m
+[32m+[m[32m  font-size: 0.85em;[m
+[32m+[m[32m}[m
+[32m+[m[32m.reveal .risk-margin table {[m
+[32m+[m[32m  font-size: 0.68em;[m
+[32m+[m[32m  margin: 0.2em 0 0.9em;[m
+[32m+[m[32m}[m
+[32m+[m[32m.reveal .risk-margin .keyphrase p {[m
+[32m+[m[32m  font-size: 1em;[m
+[32m+[m[32m}[m

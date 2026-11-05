@@ -15,7 +15,7 @@ You run a phone insurance company. A claim costs **$600**.
 ::: {.content-visible when-meta="show.dice-qr"}
 ::: {.column .rules-qr}
 ![](images/qr-dice.png){.qr .qr-small fig-alt="QR code linking to the on-screen dice page"}
-[No die? Scan to roll on your phone]{.caption-line}
+[Scan to roll the virtual die on your phone]{.caption-line}
 :::
 :::
 ::::

@@ -8,7 +8,7 @@
 ::: {.column .tq-photo-col}
 ![](images/student-testimonial.jpg){.photo .tq-photo fig-alt="Photo of the ANU Actuarial Studies student quoted on this slide, face covered by a placeholder"}
 
-[Current ANU Actuarial Studies student, originally from Kuala Lumpur]{.tq-who}
+[Mireille Kho, current ANU Actuarial Studies student, from Kuala Lumpur]{.tq-who}
 :::
 :::
 ::: {.column .tq-quotes-col}

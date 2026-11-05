@@ -1,0 +1,47 @@
+## Twist card: add an excess {.excess-slide}
+
+::: {.keyphrase}
+New rule: customers now pay the **first $200** of any claim themselves.
+:::
+
+::: {.quiz}
+::: {.q}
+**1. When someone claims, how much does your company pay now?**
+
+::: {.fragment .a}
+$600 − $200 = **$400**.
+:::
+:::
+::: {.q}
+**2. About 1 in 6 customers claims. What does that cost you per customer?**
+
+::: {.fragment .a}
+$400 ÷ 6 ≈ **$67** each (it was $100).
+:::
+:::
+::: {.q}
+**3. Should your premium go up or down?**
+
+::: {.fragment .a}
+Down, by about $33. That's why a policy with a higher excess is cheaper.
+:::
+:::
+::: {.q}
+**4. Why might customers with an excess break fewer phones?**
+
+::: {.fragment .a}
+They lose $200 when it happens, so they're more careful. Fewer claims, cheaper again.
+:::
+:::
+:::
+
+::: {.notes}
+About 5 min, straight after the game. Optional: skip if short of time. Ask each question, give teams 30 seconds, take an answer, then reveal.
+
+Easier alternatives if you want a different twist:
+
+- Repair costs go up: a new phone costs $900 to fix. New fair premium? $900 ÷ 6 = $150.
+- Clumsy class: a 1 or a 2 is now a claim. Chance 2 in 6, fair premium $600 × 2/6 = $200.
+
+For a strong maths class, follow with the next slide (how sure do you want to be?).
+:::
