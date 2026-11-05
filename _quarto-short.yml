@@ -2,4 +2,5 @@
 show:
   testimonial: false
   backup: false
+  backup-sea: false
   backup-extra: false
