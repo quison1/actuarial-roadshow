@@ -11,7 +11,7 @@
 ::: {.card .fragment}
 **Singapore**
 
-Insurers' senior actuaries must be fellows of a recognised international body, such as the SOA, the IFoA (UK) or the Actuaries Institute (Australia). The SOA is the most common route in life insurance.
+Insurers' senior actuaries must be fellows of a recognised international body, such as the SOA (US), the IFoA (UK) or the Actuaries Institute (Australia). The SOA is the most common route in life insurance.
 :::
 ::: {.card .fragment}
 **Malaysia**

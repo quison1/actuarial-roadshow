@@ -8,7 +8,7 @@ You run a phone insurance company. A claim costs **$600**.
 
 ::: {.incremental}
 - Every customer is the same: roll a die, and **a 1 means a claim** (a 1 in 6 chance).
-- Each team secretly sets a **premium**. Customers go to the cheapest insurer.
+- Each team secretly sets a **premium** (fee to charge your customer). Customers go to the cheapest insurer.
 - Roll for each customer, then tally your profit and loss.
 :::
 :::
