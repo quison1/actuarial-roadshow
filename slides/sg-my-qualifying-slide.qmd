@@ -1,0 +1,36 @@
+## Qualifying as an actuary in Singapore and Malaysia
+
+<!-- Optional slide for students from, or heading to, Singapore or Malaysia.
+     Switched by `show.sg-my` in _quarto.yml (or --profile sg-my).
+     Summarises the regulators' appointed-actuary requirements (MAS in
+     Singapore, Bank Negara Malaysia) and common practice. Check the current
+     rules with MAS, BNM, the Singapore Actuarial Society and the Actuarial
+     Society of Malaysia before each session. -->
+
+::: {.cards .cards-jobs}
+::: {.card .fragment}
+**Singapore**
+
+Insurers' senior actuaries must be fellows of a recognised international body, such as the SOA, the IFoA (UK) or the Actuaries Institute (Australia). The SOA is the most common route in life insurance.
+:::
+::: {.card .fragment}
+**Malaysia**
+
+The same idea: Bank Negara Malaysia accepts fellowships from recognised international bodies. Most students take SOA exams; the IFoA is also well established.
+:::
+::: {.card .fragment}
+**No separate local exams**
+
+The Singapore Actuarial Society and the Actuarial Society of Malaysia don't set their own exams. Members qualify through one of the international bodies.
+:::
+:::
+
+::: {.keyphrase .fragment .vn-close}
+An ANU degree counts towards both the SOA and the Actuaries Institute, so you can qualify for either market while you study.
+:::
+
+[Based on the appointed-actuary requirements of the Monetary Authority of Singapore and Bank Negara Malaysia.]{.source-line}
+
+::: {.notes}
+About 1 min, for students from or heading to Singapore or Malaysia. SOA = Society of Actuaries (US); IFoA = Institute and Faculty of Actuaries (UK); CAS (Casualty Actuarial Society) fellows are also common in general insurance. ANU: SOA Centre of Actuarial Excellence (University Earned Credit towards SOA exams) and exemption from the Actuaries Institute Foundation Program and half of the Actuary Program. Appointed actuaries also need relevant experience. Check the current MAS and BNM rules before quoting them as up to date.
+:::

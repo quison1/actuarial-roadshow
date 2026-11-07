@@ -77,6 +77,10 @@ execute:
 {{< include slides/vietnam-slide.qmd >}}
 :::
 
+::: {.content-visible when-meta="show.sg-my"}
+{{< include slides/sg-my-qualifying-slide.qmd >}}
+:::
+
 ::: {.content-visible when-meta="show.winner"}
 {{< include slides/flow-winner-slide.qmd >}}
 :::
