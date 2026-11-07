@@ -1,0 +1,4 @@
+# Sessions with students from, or heading to, Singapore or Malaysia: adds
+# "Qualifying as an actuary in Singapore and Malaysia" after the testimonial.
+show:
+  sg-my: true

@@ -27,6 +27,7 @@ show:
   testimonial: true          # "In a student's words" slide
   testimonial-photo: false   # student photo on that slide (off so the public site has no photo; use --profile with-photo)
   vietnam: false             # "Actuaries in Vietnam" slide for Vietnamese students (use --profile vietnam)
+  sg-my: false               # "Qualifying as an actuary in Singapore and Malaysia" slide (use --profile sg-my)
   backup: true               # "Backup slides" divider and the maths requirement slide
   backup-sea: true           # employers in Singapore, Malaysia and Vietnam (backup)
   backup-extra: false        # older backup slides: where actuaries work, ANU, careers

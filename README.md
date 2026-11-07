@@ -39,6 +39,7 @@ Optional slides and slide parts are switched on and off under `show:` in `_quart
 | `testimonial` | on | "In a student's words" slide |
 | `testimonial-photo` | off | Student photo on that slide; without it the quotes sit in three columns |
 | `vietnam` | off | "Actuaries in Vietnam" slide for Vietnamese students, after the testimonial |
+| `sg-my` | off | "Qualifying as an actuary in Singapore and Malaysia" slide, after the testimonial (and Vietnam slide, if on) |
 | `backup` | on | "Backup slides" divider and the maths requirement slide |
 | `backup-sea` | on | Southeast Asia employers backup slide |
 | `backup-extra` | off | Older backup slides: where actuaries work, ANU (5 slides), careers |
@@ -53,6 +54,7 @@ Each preset is a file named `_quarto-<name>.yml` that changes a few settings. Us
 | `with-photo` | Photo on | 18 |
 | `no-phones` | Dice QR code off | 18 |
 | `vietnam` | "Actuaries in Vietnam" slide on | 19 |
+| `sg-my` | Singapore and Malaysia qualifying slide on | 19 |
 | `full` | Scoreboard, winner and older backup slides on | 27 |
 | `short` | Testimonial and all backup slides off | 14 |
 
@@ -66,6 +68,7 @@ Useful combinations:
 | Short slot | `short` |
 | Short slot, no phones | `short,no-phones` |
 | School in Vietnam | `with-photo,vietnam` |
+| School in Singapore or Malaysia | `with-photo,sg-my` |
 
 If two presets change the same setting, the one listed last wins.
 
