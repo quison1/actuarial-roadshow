@@ -7,17 +7,17 @@
 ::: {.card .fragment}
 **Data scientist**
 
-Builds models from claims, health and customer data to predict what happens next.
+Builds models from data to predict what happens (insurance claim, stock market movements, customer behavior).
 :::
 ::: {.card .fragment}
-**Pricing actuary**
+**Pricing actuary and financial analyst**
 
-Sets the price of car, home, travel, health and life insurance.
+Sets the price of insurance (life, motor, property, etc.) and financial products (stock and company valuation).
 :::
 ::: {.card .fragment}
-**Risk and capital actuary**
+**Risk and capital management**
 
-Checks that insurers, banks and super funds are strong enough to survive a crisis, and reports to regulators and government.
+Checks that insurers, banks and pension funds are strong enough to survive a crisis, and reports to regulators and government.
 :::
 :::
 
