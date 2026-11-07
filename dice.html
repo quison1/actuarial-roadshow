@@ -61,24 +61,55 @@ main { flex: 1; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0
 /* --- the die ---------------------------------------------------------- */
 .stage { display: flex; flex-direction: column; align-items: center; gap: 20px; padding-top: 8px; }
 .die-btn { all: unset; cursor: pointer; border-radius: 18%; }
-.die-btn:focus-visible { outline: 4px solid var(--gold); outline-offset: 8px; }
-.die {
-  width: min(42vh, 300px, 70vw); aspect-ratio: 1; max-width: 100%;
-  background: var(--die); border-radius: 18%; box-sizing: border-box; padding: 14%;
-  display: grid; grid-template: repeat(3, 1fr) / repeat(3, 1fr);
-  box-shadow: 0 2px 0 var(--line), 0 14px 30px rgba(60, 40, 10, 0.18), inset 0 0 0 2px var(--line);
-  transition: box-shadow 0.2s;
+.die-btn:focus-visible { outline: 4px solid var(--gold); outline-offset: 12px; }
+
+/* 3D die: six faces on a cube; the cube turns to show the rolled face */
+.scene {
+  --s: min(36vh, 260px, 60vw);
+  width: var(--s); height: var(--s); max-width: 100%;
+  perspective: 1100px; position: relative; margin: 34px 10px 34px;
 }
-.die.is-claim { box-shadow: 0 0 0 6px var(--claim), 0 14px 30px rgba(120, 20, 10, 0.25); }
+.scene::after { /* soft shadow on the "table" */
+  content: ""; position: absolute; left: 12%; right: 12%; bottom: -14%; height: 12%;
+  border-radius: 50%; background: radial-gradient(closest-side, rgba(40, 25, 5, 0.28), transparent);
+  transition: transform 0.5s, opacity 0.5s;
+}
+.hop { width: 100%; height: 100%; transform-style: preserve-3d; }
+.cube {
+  width: 100%; height: 100%; position: relative; transform-style: preserve-3d;
+  transition: transform 1s cubic-bezier(.2, .75, .25, 1);
+}
+.cube.no-anim { transition: none; }
+.f {
+  position: absolute; inset: 0; box-sizing: border-box; padding: 14%;
+  display: grid; grid-template: repeat(3, 1fr) / repeat(3, 1fr);
+  background: var(--die); border-radius: 16%;
+  box-shadow: inset 0 0 0 2px var(--line), inset 0 -10px 24px rgba(60, 40, 10, 0.10);
+  backface-visibility: hidden;
+}
+.f1 { transform: rotateY(0deg)    translateZ(calc(var(--s) / 2)); }
+.f6 { transform: rotateY(180deg)  translateZ(calc(var(--s) / 2)); }
+.f3 { transform: rotateY(90deg)   translateZ(calc(var(--s) / 2)); }
+.f4 { transform: rotateY(-90deg)  translateZ(calc(var(--s) / 2)); }
+.f2 { transform: rotateX(90deg)   translateZ(calc(var(--s) / 2)); }
+.f5 { transform: rotateX(-90deg)  translateZ(calc(var(--s) / 2)); }
 .pip { width: 62%; aspect-ratio: 1; border-radius: 50%; background: var(--pip); place-self: center; visibility: hidden; }
 .pip.on { visibility: visible; }
-.die.face-1 .pip.on { background: var(--claim); width: 78%; }
-.die.rolling { animation: tumble 0.55s cubic-bezier(.3,.7,.4,1); }
-@keyframes tumble {
-  0% { transform: rotate(0) scale(1); }
-  30% { transform: rotate(-160deg) scale(0.86); }
-  65% { transform: rotate(-300deg) scale(1.04); }
-  100% { transform: rotate(-360deg) scale(1); }
+.f1 .pip.on { background: var(--claim); width: 78%; }
+.scene.is-claim .f { box-shadow: inset 0 0 0 6px var(--claim); }
+.scene.rolling .hop { animation: hop 1s cubic-bezier(.3, .6, .4, 1); }
+.scene.rolling::after { animation: shadow 1s cubic-bezier(.3, .6, .4, 1); }
+@keyframes hop { /* tossed: smaller while tumbling so the corners stay clear */
+  0% { transform: translateY(0) scale(1); }
+  25% { transform: translateY(-6%) scale(0.6); }
+  65% { transform: translateY(0) scale(0.66); }
+  85% { transform: translateY(-2%) scale(0.95); }
+  100% { transform: translateY(0) scale(1); }
+}
+@keyframes shadow {
+  0%, 60%, 100% { transform: scale(1); opacity: 1; }
+  30% { transform: scale(0.7); opacity: 0.5; }
+  75% { transform: scale(0.93); opacity: 0.9; }
 }
 
 .verdict { min-height: 1.2em; font-size: clamp(1.8rem, 4.2vw, 3rem); font-weight: 800; letter-spacing: -0.01em; text-align: center; }
@@ -147,7 +178,8 @@ kbd { font-family: inherit; font-size: 0.8em; border: 1px solid var(--line); bor
 footer { font-size: 0.78rem; color: var(--muted); }
 
 @media (prefers-reduced-motion: reduce) {
-  .die.rolling { animation: none; }
+  .cube { transition: none; }
+  .scene.rolling .hop, .scene.rolling::after { animation: none; }
   .fill, button.act { transition: none; }
 }
 </style>
@@ -163,7 +195,7 @@ footer { font-size: 0.78rem; color: var(--muted); }
   <main>
     <section class="stage" aria-label="Die">
       <button class="die-btn" id="dieBtn" aria-label="Roll the die">
-        <div class="die" id="die" aria-hidden="true"></div>
+        <div class="scene" id="die" aria-hidden="true"><div class="hop"><div class="cube" id="cube"></div></div></div>
       </button>
       <div class="verdict idle" id="verdict" aria-live="polite">Tap the die or press Roll</div>
       <div class="actions">
@@ -213,9 +245,25 @@ footer { font-size: 0.78rem; color: var(--muted); }
   var money = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', maximumFractionDigits: 0 });
 
   var $ = function (id) { return document.getElementById(id); };
-  var die = $('die');
-  for (var i = 0; i < 9; i++) { var p = document.createElement('span'); p.className = 'pip'; die.appendChild(p); }
-  var pips = die.children;
+  var die = $('die'), cube = $('cube');
+  // Build the six faces; opposite faces add to 7 (1-6, 2-5, 3-4)
+  for (var f = 1; f <= 6; f++) {
+    var face = document.createElement('div');
+    face.className = 'f f' + f;
+    for (var i = 0; i < 9; i++) {
+      var p = document.createElement('span');
+      p.className = 'pip' + (FACES[f].indexOf(i) >= 0 ? ' on' : '');
+      face.appendChild(p);
+    }
+    cube.appendChild(face);
+  }
+  // Cube rotation (x, y degrees) that brings each face to the front
+  var ROT = { 1: [0, 0], 2: [-90, 0], 3: [0, -90], 4: [0, 90], 5: [90, 0], 6: [0, 180] };
+  var turnX = 0, turnY = 0;
+  function orient(n, spin) {
+    if (spin) { turnX += 2 + (d6() % 2); turnY += 1 + (d6() % 2); } // whole turns, so the face still lands flat
+    cube.style.transform = 'rotateX(' + (ROT[n][0] + 360 * turnX) + 'deg) rotateY(' + (ROT[n][1] + 360 * turnY) + 'deg)';
+  }
 
   // Fair 1-6 using rejection sampling (no modulo bias)
   function d6() {
@@ -231,9 +279,8 @@ footer { font-size: 0.78rem; color: var(--muted); }
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   function showFace(n) {
-    var on = FACES[n];
-    for (var i = 0; i < 9; i++) pips[i].classList.toggle('on', on.indexOf(i) >= 0);
-    die.className = 'die face-' + n + (n === 1 ? ' is-claim' : '');
+    orient(n, false);
+    die.classList.toggle('is-claim', n === 1);
   }
 
   // A small die face for the history and the batch of ten; claims (a 1) are red
@@ -293,14 +340,13 @@ footer { font-size: 0.78rem; color: var(--muted); }
     hist.push(r); groups.push(1);
     if (reduce) { finish(r); return; }
     busy = true;
-    die.classList.remove('rolling'); void die.offsetWidth; die.classList.add('rolling');
+    die.classList.remove('is-claim', 'rolling'); void die.offsetWidth; die.classList.add('rolling');
     setVerdict('Rolling…', 'idle');
-    var t = 0, spin = setInterval(function () { showFace(((t++ + r) % 6) + 1); }, 70);
-    setTimeout(function () { clearInterval(spin); busy = false; finish(r); }, 520);
+    orient(r, true);
+    setTimeout(function () { die.classList.remove('rolling'); busy = false; finish(r); }, 1000);
   }
   function finish(r) {
     showFace(r);
-    die.classList.add('face-' + r);
     if (r === 1) setVerdict('Rolled 1: Claim! −$600', 'claim'); else setVerdict('Rolled ' + r + ': No claim', 'ok');
     render();
   }
@@ -312,7 +358,8 @@ footer { font-size: 0.78rem; color: var(--muted); }
     hist.push.apply(hist, rs); groups.push(10);
     var b = $('batch'); b.innerHTML = '';
     rs.forEach(function (r) { var m = smallFace(r); m.classList.add('mini'); m.title = 'Rolled ' + r; b.appendChild(m); });
-    showFace(rs[rs.length - 1]);
+    orient(rs[rs.length - 1], !reduce);
+    die.classList.toggle('is-claim', rs[rs.length - 1] === 1);
     setVerdict(k === 0 ? '10 customers: no claims' : '10 customers: ' + k + (k === 1 ? ' claim' : ' claims') + ', −' + money.format(k * COST), k ? 'claim' : 'ok');
     render();
   }
@@ -360,7 +407,9 @@ footer { font-size: 0.78rem; color: var(--muted); }
 
   function start(data) {
     if (data && Array.isArray(data.hist)) { hist = data.hist.slice(); groups = (data.groups || []).slice(); }
+    cube.classList.add('no-anim');
     showFace(hist.length ? hist[hist.length - 1] : 6);
+    void cube.offsetWidth; cube.classList.remove('no-anim');
     if (hist.length) setVerdict('Tally restored', 'idle');
     render();
   }
