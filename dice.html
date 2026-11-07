@@ -102,10 +102,16 @@ kbd { font-family: inherit; font-size: 0.8em; border: 1px solid var(--line); bor
 /* batch of ten */
 .batch { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; min-height: 0; }
 .mini {
-  width: 40px; height: 40px; border-radius: 9px; display: grid; place-items: center;
-  font-weight: 800; font-size: 1.15rem; background: var(--surface); color: var(--fg); border: 2px solid var(--line);
+  width: 40px; height: 40px; border-radius: 9px; box-sizing: border-box; padding: 6px;
+  display: grid; grid-template: repeat(3, 1fr) / repeat(3, 1fr);
+  background: var(--die); border: 2px solid var(--line);
 }
-.mini.c { background: var(--claim); border-color: var(--claim); color: #fff; }
+.mini.c { background: var(--claim); border-color: var(--claim); }
+
+/* small die faces (batch of ten and roll history) */
+.face i { width: 72%; aspect-ratio: 1; border-radius: 50%; background: var(--pip); place-self: center; visibility: hidden; }
+.face i.on { visibility: visible; }
+.face.c i { background: #fff; }
 
 /* --- tally ------------------------------------------------------------ */
 .tally { background: var(--surface); border-top: 4px solid var(--gold); padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 16px; min-width: 0; }
@@ -126,10 +132,11 @@ kbd { font-family: inherit; font-size: 0.8em; border: 1px solid var(--line); bor
 .hist-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
 .history { display: flex; flex-wrap: wrap; gap: 4px; max-height: 150px; overflow-y: auto; }
 .history span {
-  width: 24px; height: 24px; border-radius: 5px; display: grid; place-items: center;
-  font-size: 0.8rem; font-weight: 600; background: var(--bg); color: var(--muted);
+  width: 26px; height: 26px; border-radius: 6px; box-sizing: border-box; padding: 4px;
+  display: grid; grid-template: repeat(3, 1fr) / repeat(3, 1fr);
+  background: var(--die); border: 1px solid var(--line);
 }
-.history span.c { background: var(--claim); color: #fff; }
+.history span.c { background: var(--claim); border-color: var(--claim); }
 .empty { margin: 0; font-size: 0.85rem; color: var(--muted); }
 
 .tools { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
@@ -185,7 +192,7 @@ footer { font-size: 0.78rem; color: var(--muted); }
 
       <div>
         <div class="hist-head"><h2>Every roll</h2></div>
-        <div class="history" id="history"><p class="empty">No rolls yet. Each roll appears here; red squares are claims.</p></div>
+        <div class="history" id="history"><p class="empty">No rolls yet. Each roll appears here; red dice are claims.</p></div>
       </div>
 
       <div class="tools">
@@ -229,6 +236,21 @@ footer { font-size: 0.78rem; color: var(--muted); }
     die.className = 'die face-' + n + (n === 1 ? ' is-claim' : '');
   }
 
+  // A small die face for the history and the batch of ten; claims (a 1) are red
+  function smallFace(n) {
+    var s = document.createElement('span');
+    s.className = 'face' + (n === 1 ? ' c' : '');
+    s.setAttribute('role', 'img');
+    s.setAttribute('aria-label', 'Rolled ' + n + (n === 1 ? ', a claim' : ''));
+    var on = FACES[n];
+    for (var i = 0; i < 9; i++) {
+      var pip = document.createElement('i');
+      if (on.indexOf(i) >= 0) pip.className = 'on';
+      s.appendChild(pip);
+    }
+    return s;
+  }
+
   function setVerdict(text, cls) { var v = $('verdict'); v.textContent = text; v.className = 'verdict ' + cls; }
 
   function render() {
@@ -246,15 +268,13 @@ footer { font-size: 0.78rem; color: var(--muted); }
 
     var h = $('history');
     if (!n) {
-      h.innerHTML = '<p class="empty">No rolls yet. Each roll appears here; red squares are claims.</p>';
+      h.innerHTML = '<p class="empty">No rolls yet. Each roll appears here; red dice are claims.</p>';
     } else {
       h.innerHTML = '';
       var frag = document.createDocumentFragment();
       hist.forEach(function (r, idx) {
-        var s = document.createElement('span');
-        s.textContent = r;
+        var s = smallFace(r);
         s.title = 'Customer ' + (idx + 1) + ': rolled ' + r;
-        if (r === 1) s.className = 'c';
         frag.appendChild(s);
       });
       h.appendChild(frag);
@@ -291,7 +311,7 @@ footer { font-size: 0.78rem; color: var(--muted); }
     for (var i = 0; i < 10; i++) { var r = d6(); rs.push(r); if (r === 1) k++; }
     hist.push.apply(hist, rs); groups.push(10);
     var b = $('batch'); b.innerHTML = '';
-    rs.forEach(function (r) { var m = document.createElement('span'); m.className = 'mini' + (r === 1 ? ' c' : ''); m.textContent = r; b.appendChild(m); });
+    rs.forEach(function (r) { var m = smallFace(r); m.classList.add('mini'); m.title = 'Rolled ' + r; b.appendChild(m); });
     showFace(rs[rs.length - 1]);
     setVerdict(k === 0 ? '10 customers: no claims' : '10 customers: ' + k + (k === 1 ? ' claim' : ' claims') + ', −' + money.format(k * COST), k ? 'claim' : 'ok');
     render();
