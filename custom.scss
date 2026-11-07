@@ -615,3 +615,9 @@ $die-small: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' vi
 
 // Vietnam slide: closing line clear of the cards
 .reveal .keyphrase.vn-close { margin-top: 0.9em; font-size: 0.95em; }
+
+// Rules slide: each bullet is its own list (so it can carry a step number);
+// keep them spaced like one list
+.reveal .slides section .rules-steps ul { margin-top: 0; margin-bottom: 0; }
+.reveal .slides section .rules-steps ul li { margin-bottom: 0; }
+.reveal .slides section .rules-steps > div:last-child ul { margin-bottom: 0.8em; }
