@@ -55,7 +55,13 @@ execute:
 
 {{< include slides/round1-distribution-slide.qmd >}}
 
+::: {.content-hidden when-meta="show.more-customers-editable"}
 {{< include slides/round1-more-customers-slide.qmd >}}
+:::
+
+::: {.content-visible when-meta="show.more-customers-editable"}
+{{< include slides/round1-more-customers-editable-slide.qmd >}}
+:::
 
 {{< include slides/flow-bridge-slide.qmd >}}
 
