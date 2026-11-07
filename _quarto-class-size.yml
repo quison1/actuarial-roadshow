@@ -1,0 +1,4 @@
+# "What happens with more customers?" with an editable first row: type the
+# number of customers (e.g. the class size) during the talk.
+show:
+  more-customers-editable: true

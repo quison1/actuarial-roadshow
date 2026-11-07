@@ -36,6 +36,7 @@ Optional slides and slide parts are switched on and off under `show:` in `_quart
 | `scoreboard` | off | Live team scoreboard during the game |
 | `winner` | off | Winner announcement (needs `scoreboard` on) |
 | `dice-qr` | on | QR code to the dice page, on the rules slide |
+| `more-customers-editable` | off | On "What happens with more customers?", the first row's number of customers is a box you can type into (e.g. the class size) instead of a fixed 20 |
 | `testimonial` | on | "In a student's words" slide |
 | `testimonial-photo` | off | Student photo on that slide; without it the quotes sit in three columns |
 | `vietnam` | off | "Actuaries in Vietnam" slide for Vietnamese students, after the testimonial |
@@ -53,6 +54,7 @@ Each preset is a file named `_quarto-<name>.yml` that changes a few settings. Us
 | *(none)* | Defaults above | 18 |
 | `with-photo` | Photo on | 18 |
 | `no-phones` | Dice QR code off | 18 |
+| `class-size` | Editable first row on "What happens with more customers?" | 18 |
 | `vietnam` | "Actuaries in Vietnam" slide on | 19 |
 | `sg-my` | Singapore and Malaysia qualifying slide on | 19 |
 | `full` | Scoreboard, winner and older backup slides on | 27 |

@@ -24,6 +24,7 @@ show:
   scoreboard: false          # live team scoreboard during the game
   winner: false              # winner announcement (reads the scoreboard, so needs it on)
   dice-qr: true              # QR code to the on-screen dice page, on the rules slide
+  more-customers-editable: false  # "What happens with more customers?": type the first row's number of customers (use --profile class-size)
   testimonial: true          # "In a student's words" slide
   testimonial-photo: false   # student photo on that slide (off so the public site has no photo; use --profile with-photo)
   vietnam: false             # "Actuaries in Vietnam" slide for Vietnamese students (use --profile vietnam)

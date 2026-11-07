@@ -1,0 +1,290 @@
+## What happens with more customers?
+
+<!-- Editable version: switched by `show.more-customers-editable`. -->
+
+```{=html}
+<!--
+  Law of large numbers slide for "Insure the Class", editable version.
+  Same as round1-more-customers-slide.qmd, except the first row's number of
+  customers is a box you can type into during the talk (e.g. the class size).
+  Changing it clears the runs so far. Uses its own class names (llc-*) so it
+  cannot clash with the fixed version.
+  Each run simulates every pool size: each customer claims with
+  probability data-claim-prob, and each claim costs data-claim-cost.
+  The dots show the average cost per customer from every run so far;
+  the latest run is gold.
+
+  "Show theory" shades where about 95% of runs should land:
+  expected +/- 1.96 standard deviations, where the standard deviation of the
+  average cost is claim cost x sqrt(p(1 - p) / n). It halves each time the
+  pool gets four times bigger.
+
+  Settings (on the .llc div below):
+    data-claim-cost  cost of one claim in dollars (default 600)
+    data-claim-prob  chance a customer claims, as a decimal or fraction (default 1/6, a 1 on a die)
+    data-sizes       pool sizes to compare (default 20,100,1000); the first is
+                     only the starting value of the editable row
+    data-axis-max    right end of the scale in dollars (default 300)
+    data-axis-step   gap between scale labels in dollars (default 50)
+-->
+<div class="llc" data-claim-cost="600" data-claim-prob="1/6" data-sizes="20,100,1000" data-axis-max="300" data-axis-step="50">
+  <div class="llc-grid" data-out="grid"></div>
+  <div class="llc-tools">
+    <button type="button" class="llc-btn" data-act="one">Simulate once</button>
+    <button type="button" class="llc-btn" data-act="many">Simulate 20 times</button>
+    <span class="llc-count" data-out="count">No runs yet</span>
+    <span class="llc-spacer"></span>
+    <button type="button" class="llc-small" data-act="theory">Show theory</button>
+    <button type="button" class="llc-small" data-act="reset">Reset</button>
+  </div>
+</div>
+
+<style>
+.reveal .llc {
+  --llc-accent: #24476b;
+  --llc-mark: #a8322a;
+  --llc-gold: #be830e; /* $anu-gold in custom.scss */
+  --llc-line: rgba(0, 0, 0, 0.15);
+  --llc-line: color-mix(in srgb, currentColor 16%, transparent);
+  text-align: left;
+  font-variant-numeric: tabular-nums;
+  margin-top: 0.2em;
+}
+.reveal .llc .llc-grid {
+  display: grid;
+  grid-template-columns: 6.5em 1fr 230px;
+  column-gap: 28px;
+  row-gap: 14px;
+}
+.reveal .llc .llc-label { align-self: center; font-size: 0.6em; font-weight: 700; line-height: 1.15; }
+.reveal .llc .llc-n {
+  font: inherit; font-weight: 700; width: 4.2em; padding: 0.05em 0.25em;
+  color: var(--llc-accent); text-align: right;
+  border: 2px solid var(--llc-line); border-radius: 8px; background: transparent;
+}
+.reveal .llc .llc-n:focus-visible { outline: 3px solid var(--llc-accent); outline-offset: 2px; }
+.reveal .llc .llc-label small { display: block; font-weight: 400; font-size: 0.75em; opacity: 0.7; }
+.reveal .llc .llc-track {
+  position: relative; height: 104px;
+  border-bottom: 2px solid var(--llc-line);
+}
+.reveal .llc .llc-band {
+  display: none; position: absolute; top: 0; bottom: 0;
+  background: color-mix(in srgb, var(--llc-mark) 12%, transparent);
+  border-left: 1px solid color-mix(in srgb, var(--llc-mark) 40%, transparent);
+  border-right: 1px solid color-mix(in srgb, var(--llc-mark) 40%, transparent);
+}
+.reveal .llc.show-theory .llc-band { display: block; }
+.reveal .llc .llc-exp {
+  position: absolute; top: 0; bottom: 0; width: 0;
+  border-left: 2px dashed var(--llc-mark);
+}
+.reveal .llc .llc-dot {
+  position: absolute; top: 50%; width: 18px; height: 18px; margin: -9px 0 0 -9px;
+  border-radius: 50%; background: var(--llc-accent); opacity: 0.3;
+}
+.reveal .llc .llc-dot.is-latest {
+  width: 26px; height: 26px; margin: -13px 0 0 -13px; opacity: 1;
+  background: var(--llc-gold);
+  box-shadow: 0 0 0 3px #fff;
+}
+.reveal .llc .llc-result { align-self: center; border-top: 3px solid var(--llc-gold); padding-top: 6px; }
+.reveal .llc .llc-avg { font-size: 1.1em; font-weight: 700; color: var(--llc-gold); line-height: 1.1; }
+.reveal .llc .llc-lab { font-size: 0.45em; opacity: 0.75; margin-top: 3px; }
+.reveal .llc .llc-range { font-size: 0.45em; margin-top: 3px; min-height: 1.3em; }
+.reveal .llc .llc-range b { font-weight: 700; }
+.reveal .llc .llc-sd { visibility: hidden; font-size: 0.45em; color: var(--llc-mark); font-weight: 700; margin-top: 2px; }
+.reveal .llc.show-theory .llc-sd { visibility: visible; }
+
+.reveal .llc .llc-axis { position: relative; height: 3.4em; margin-top: -8px; font-size: 0.45em; }
+.reveal .llc .llc-tick {
+  position: absolute; top: 4px; transform: translateX(-50%);
+  font-weight: 700; white-space: nowrap;
+}
+.reveal .llc .llc-tick.is-exp { color: var(--llc-mark); }
+.reveal .llc .llc-axis-lab { position: absolute; left: 0; right: 0; top: 1.9em; text-align: center; opacity: 0.75; }
+
+.reveal .llc .llc-tools { display: flex; gap: 14px; align-items: center; margin-top: 4px; }
+.reveal .llc .llc-spacer { flex: 1; }
+.reveal .llc .llc-btn {
+  font: inherit; font-size: 0.5em; font-weight: 700; color: var(--llc-accent);
+  padding: 0.4em 1em; border: 2.5px solid currentColor; border-radius: 12px;
+  background: transparent; cursor: pointer;
+}
+.reveal .llc .llc-btn:hover { background: color-mix(in srgb, currentColor 9%, transparent); }
+.reveal .llc .llc-count { font-size: 0.45em; opacity: 0.7; }
+.reveal .llc .llc-small {
+  font: inherit; font-size: 0.42em; padding: 0.35em 0.9em; color: inherit;
+  border: 1.5px solid var(--llc-line); border-radius: 8px; background: transparent; cursor: pointer;
+}
+.reveal .llc button:disabled { opacity: 0.35; cursor: default; }
+.reveal .llc button:focus-visible { outline: 3px solid var(--llc-accent); outline-offset: 3px; }
+</style>
+
+<script>
+(function () {
+  var money = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', maximumFractionDigits: 0 });
+  var fmt = function (v) { return money.format(v); };
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  document.querySelectorAll('.llc:not([data-ready])').forEach(function (root) {
+    root.dataset.ready = '1';
+    var cost = Number(root.dataset.claimCost) || 600;
+    var prob = function (s, d) { var m = String(s || '').split('/'); var v = m.length === 2 ? Number(m[0]) / Number(m[1]) : Number(s); return v > 0 && v < 1 ? v : d; };
+    var p = prob(root.dataset.claimProb, 1 / 6);
+    var axisMax = Number(root.dataset.axisMax) || 300;
+    var axisStep = Number(root.dataset.axisStep) || 50;
+    var sizes = (root.dataset.sizes || '20,100,1000').split(',').map(Number);
+    var expected = p * cost;
+    var pct = function (v) { return Math.max(0, Math.min(v / axisMax, 1)) * 100 + '%'; };
+    var grid = root.querySelector('[data-out="grid"]');
+    var count = root.querySelector('[data-out="count"]');
+    var buttons = root.querySelectorAll('button[data-act]');
+    var runs = 0;
+
+    // Build one row per pool size
+    var rows = sizes.map(function (n, idx) {
+      var label = document.createElement('div');
+      label.className = 'llc-label';
+      if (idx === 0) {
+        label.innerHTML = '<input type="number" class="llc-n" min="1" max="100000" step="1" aria-label="Number of customers in the first row"><small>customers</small>';
+        label.querySelector('input').value = n;
+      } else {
+        label.innerHTML = n.toLocaleString('en-AU') + '<small>customers</small>';
+      }
+      var track = document.createElement('div');
+      track.className = 'llc-track';
+      var band = document.createElement('div');
+      band.className = 'llc-band';
+      var exp = document.createElement('div');
+      exp.className = 'llc-exp';
+      exp.style.left = pct(expected);
+      track.append(band, exp);
+      var result = document.createElement('div');
+      result.className = 'llc-result';
+      result.innerHTML =
+        '<div class="llc-avg">–</div><div class="llc-lab">Latest run</div>' +
+        '<div class="llc-range"></div>' +
+        '<div class="llc-sd"></div>';
+      grid.append(label, track, result);
+      var row = { n: n, track: track, band: band, sd: result.querySelector('.llc-sd'), avg: result.querySelector('.llc-avg'), range: result.querySelector('.llc-range'), values: [], latest: null };
+      setTheory(row);
+      return row;
+    });
+
+    // Theory band and 95% range for a row's pool size
+    function setTheory(r) {
+      var sd = cost * Math.sqrt((p * (1 - p)) / r.n); // standard deviation of the average cost
+      var lo = Math.max(0, expected - 1.96 * sd), hi = Math.min(axisMax, expected + 1.96 * sd);
+      r.band.style.left = pct(lo);
+      r.band.style.width = ((hi - lo) / axisMax) * 100 + '%';
+      r.sd.textContent = '95% of runs: ' + fmt(Math.max(0, expected - 1.96 * sd)) + ' to ' + fmt(expected + 1.96 * sd);
+    }
+
+    // Editable first row: a new pool size clears the runs so all rows stay comparable
+    var nInput = root.querySelector('.llc-n');
+    function applyN() {
+      var v = Math.round(Number(nInput.value));
+      if (!(v >= 1)) v = rows[0].n;
+      v = Math.min(v, 100000);
+      nInput.value = v;
+      if (v === rows[0].n) return;
+      rows[0].n = v;
+      setTheory(rows[0]);
+      reset();
+    }
+    nInput.addEventListener('change', applyN);
+    nInput.addEventListener('keydown', function (e) {
+      e.stopPropagation(); // typing digits should not move the slides
+      if (e.key === 'Enter') { applyN(); nInput.blur(); }
+    });
+
+    // Scale under the tracks; the expected cost replaces the plain label it lands on
+    var axis = document.createElement('div');
+    axis.className = 'llc-axis';
+    for (var v = 0; v <= axisMax; v += axisStep) {
+      if (Math.abs(v - expected) < axisStep / 2) continue;
+      var t = document.createElement('span');
+      t.className = 'llc-tick';
+      t.style.left = pct(v);
+      t.textContent = fmt(v) + (v === axisMax ? '+' : '');
+      axis.appendChild(t);
+    }
+    var et = document.createElement('span');
+    et.className = 'llc-tick is-exp';
+    et.style.left = pct(expected);
+    et.textContent = 'Expected ' + fmt(expected);
+    axis.appendChild(et);
+    var al = document.createElement('div');
+    al.className = 'llc-axis-lab';
+    al.textContent = 'Average cost per customer';
+    axis.appendChild(al);
+    grid.append(document.createElement('div'), axis, document.createElement('div'));
+
+    function simulate(n) {
+      var k = 0;
+      for (var i = 0; i < n; i++) if (Math.random() < p) k++;
+      return (k * cost) / n;
+    }
+
+    function runOnce() {
+      rows.forEach(function (r) {
+        var a = simulate(r.n);
+        r.values.push(a);
+        if (r.latest) r.latest.classList.remove('is-latest');
+        var d = document.createElement('span');
+        d.className = 'llc-dot is-latest';
+        d.style.left = pct(a); // anything past the scale sits on its right edge ("$300+")
+        d.title = fmt(a);
+        r.track.appendChild(d);
+        r.latest = d;
+        r.avg.textContent = fmt(a);
+        if (r.values.length > 1) {
+          r.range.innerHTML = 'Range <b>' + fmt(Math.min.apply(null, r.values)) + ' to ' + fmt(Math.max.apply(null, r.values)) + '</b>';
+        }
+      });
+      runs++;
+      count.textContent = runs + (runs === 1 ? ' run' : ' runs');
+    }
+
+    function reset() {
+      rows.forEach(function (r) {
+        r.values = [];
+        r.latest = null;
+        r.track.querySelectorAll('.llc-dot').forEach(function (d) { d.remove(); });
+        r.avg.textContent = '–';
+        r.range.textContent = '';
+      });
+      runs = 0;
+      count.textContent = 'No runs yet';
+    }
+
+    function setBusy(busy) {
+      buttons.forEach(function (b) { if (b.dataset.act !== 'theory') b.disabled = busy; });
+    }
+
+    root.addEventListener('click', function (e) {
+      var b = e.target.closest('button[data-act]');
+      if (!b || b.disabled) return;
+      b.blur(); // keep reveal.js arrow-key navigation working
+      var act = b.dataset.act;
+      if (act === 'one') runOnce();
+      else if (act === 'reset') reset();
+      else if (act === 'theory') {
+        var on = root.classList.toggle('show-theory');
+        b.textContent = on ? 'Hide theory' : 'Show theory';
+      } else if (act === 'many') {
+        if (reduceMotion) { for (var i = 0; i < 20; i++) runOnce(); return; }
+        setBusy(true);
+        var left = 20;
+        (function step() {
+          runOnce();
+          if (--left > 0) setTimeout(step, 90);
+          else setBusy(false);
+        })();
+      }
+    });
+  });
+})();
+</script>
+```
