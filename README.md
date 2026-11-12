@@ -41,8 +41,8 @@ Optional slides and slide parts are switched on and off under `show:` in `_quart
 | `testimonial-photo` | off | Student photo on that slide; without it the quotes sit in three columns |
 | `vietnam` | off | "Actuaries in Vietnam" slide for Vietnamese students, after the testimonial |
 | `sg-my` | off | "Qualifying as an actuary in Singapore and Malaysia" slide, after the testimonial (and Vietnam slide, if on) |
-| `backup` | on | "Backup slides" divider and the maths requirement slide |
-| `backup-sea` | on | Southeast Asia employers backup slide |
+| `backup` | off | "Backup slides" divider and the maths requirement slide |
+| `backup-sea` | off | Southeast Asia employers backup slide |
 | `backup-extra` | off | Older backup slides: where actuaries work, ANU (5 slides), careers |
 
 ## Presets
